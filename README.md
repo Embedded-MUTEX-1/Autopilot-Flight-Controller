@@ -1,5 +1,11 @@
 The goal of this project is to build a flight controller with GPS navigation based on ESP32-S3. The embedded software is designed to be as portable as possible.
 
+Project status:
+- Low-level interfaces (Done)
+- Devices interfaces (In progress)
+- Controllers (Pending)
+- Telemetry (Pending)
+
 Technologies used:
 - Arduino Framework + ESP-IDF
 - PlatformIO + (Clion IDE or VS Code)
