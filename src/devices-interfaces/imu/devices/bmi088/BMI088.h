@@ -27,6 +27,7 @@
 #include "../../../low-level/I2cDevice.h"
 #include <cstdint>
 #include <cmath>
+#include "../../../../utils/utils.h"
 
 #define M_PI 3.14159265358979323846
 

@@ -22,6 +22,7 @@
 
 
 #include "BMI088.h"
+#include <string.h>
 
 /* Macros to get and set register fields */
 #define GET_FIELD(regname,value) ((value & regname##_MASK) >> regname##_POS)
@@ -627,7 +628,7 @@ int Bmi088Accel::begin()
   if (!setMode(true)) {
     return -6;
   } 
-  ThisThread::sleep_for(50ms);
+  delay_milis(50);
   /* set default range */
   if (!setRange(RANGE_24G)) {
     return -7;
@@ -755,7 +756,7 @@ bool Bmi088Accel::setOdr(Odr odr)
   }
   writeReg = SET_FIELD(writeReg,ACC_ODR,value);
   writeRegister(ACC_ODR_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+    delay_milis(1);
   readRegisters(ACC_ODR_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -767,7 +768,7 @@ bool Bmi088Accel::setRange(Range range)
   readRegisters(ACC_RANGE_ADDR,1,&readReg);
   writeReg = SET_FIELD(readReg,ACC_RANGE,range);
   writeRegister(ACC_RANGE_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+    delay_milis(1);
   readRegisters(ACC_RANGE_ADDR,1,&readReg);
   if (readReg == writeReg) {
     switch (range) {
@@ -813,7 +814,7 @@ bool Bmi088Accel::mapDrdyInt1(bool enable)
   readRegisters(ACC_INT1_DRDY_ADDR,1,&readReg);
   writeReg = SET_FIELD(readReg,ACC_INT1_DRDY,enable);
   writeRegister(ACC_INT1_DRDY_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(ACC_INT1_DRDY_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;  
 }
@@ -825,7 +826,7 @@ bool Bmi088Accel::mapDrdyInt2(bool enable)
   readRegisters(ACC_INT2_DRDY_ADDR,1,&readReg);
   writeReg = SET_FIELD(readReg,ACC_INT2_DRDY,enable);
   writeRegister(ACC_INT2_DRDY_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(ACC_INT2_DRDY_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -946,7 +947,7 @@ bool Bmi088Accel::pinModeInt1(PinIO io, PinMode mode, PinLevel level)
   }
   writeReg = SET_FIELD(readReg,ACC_INT1_IO_CTRL,(pin_io | pin_mode | active_lvl));
   writeRegister(ACC_INT1_IO_CTRL_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(ACC_INT1_IO_CTRL_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;  
 }
@@ -1001,7 +1002,7 @@ bool Bmi088Accel::pinModeInt2(PinIO io, PinMode mode, PinLevel level)
   }
   writeReg = SET_FIELD(readReg,ACC_INT2_IO_CTRL,(pin_io | pin_mode | active_lvl));
   writeRegister(ACC_INT2_IO_CTRL_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(ACC_INT2_IO_CTRL_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;  
 }
@@ -1016,12 +1017,12 @@ bool Bmi088Accel::selfTest()
   /* set 1.6 kHz ODR, 4x oversampling */
   setOdr(ODR_1600HZ_BW_145HZ);
   /* wait >2 ms */
-  ThisThread::sleep_for(3ms);
+    delay_milis(3);
   /* enable self test, positive polarity */
   writeReg = SET_FIELD(writeReg,ACC_SELF_TEST,ACC_POS_SELF_TEST);
   writeRegister(ACC_SELF_TEST_ADDR,writeReg);
   /* wait >50 ms */
-  ThisThread::sleep_for(51ms);
+    delay_milis(51);
   /* read self test values */
   readSensor();
   for (uint8_t i = 0; i < 3; i++) {
@@ -1031,7 +1032,7 @@ bool Bmi088Accel::selfTest()
   writeReg = SET_FIELD(writeReg,ACC_SELF_TEST,ACC_NEG_SELF_TEST);
   writeRegister(ACC_SELF_TEST_ADDR,writeReg);
   /* wait >50 ms */
-  ThisThread::sleep_for(51ms);
+    delay_milis(51);
   /* read self test values */
   readSensor();
   for (uint8_t i = 0; i < 3; i++) {
@@ -1041,7 +1042,7 @@ bool Bmi088Accel::selfTest()
   writeReg = SET_FIELD(writeReg,ACC_SELF_TEST,ACC_DIS_SELF_TEST);
   writeRegister(ACC_SELF_TEST_ADDR,writeReg);
   /* wait >50 ms */
-  ThisThread::sleep_for(51ms); 
+  delay_milis(5); 
   /* check self test results */
   if ((fabs(accel_pos_mg[0] - accel_neg_mg[0]) >= 1000) && (fabs(accel_pos_mg[1] - accel_neg_mg[1]) >= 1000) && (fabs(accel_pos_mg[2] - accel_neg_mg[2]) >= 500)) {
     return true;
@@ -1057,7 +1058,7 @@ bool Bmi088Accel::setMode(bool active)
   uint8_t value = (active) ? ACC_ACTIVE_MODE_CMD : ACC_SUSPEND_MODE_CMD;
   writeReg = SET_FIELD(writeReg,ACC_PWR_CONF,value);
   writeRegister(ACC_PWR_CONF_ADDR,writeReg);
-  ThisThread::sleep_for(5ms); // 5 ms wait after power mode changes
+  delay_milis(5); // 5 ms wait after power mode changes
   readRegisters(ACC_PWR_CONF_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1069,7 +1070,7 @@ bool Bmi088Accel::setPower(bool enable)
   uint8_t value = (enable) ? ACC_ENABLE_CMD : ACC_DISABLE_CMD;
   writeReg = SET_FIELD(writeReg,ACC_PWR_CNTRL,value);
   writeRegister(ACC_PWR_CNTRL_ADDR,writeReg);
-  ThisThread::sleep_for(5ms); // 5 ms wait after power mode changes
+  delay_milis(5); // 5 ms wait after power mode changes
   readRegisters(ACC_PWR_CNTRL_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1080,7 +1081,7 @@ void Bmi088Accel::softReset()
   uint8_t reg = 0;
   reg = SET_FIELD(reg,ACC_SOFT_RESET,ACC_RESET_CMD);
   writeRegister(ACC_SOFT_RESET_ADDR,reg);
-  ThisThread::sleep_for(50ms);
+  delay_milis(50);
 }
 
 /* checks the BMI088 for configuration errors */
@@ -1115,7 +1116,7 @@ void Bmi088Accel::writeRegister(uint8_t subAddress, uint8_t data)
     buf[0] = (char)subAddress;
     buf[1] = (char)data;
 
-    if(_i2c->write(_address << 1, buf, 2, false) != 0) {
+    if(_i2c->writeBytes(_address, buf, 2, false) != 0) {
         return;
     }
 }
@@ -1126,7 +1127,7 @@ void Bmi088Accel::writeRegisters(uint8_t subAddress, uint8_t count, const uint8_
     char buf[100];
 	buf[0] = (char)subAddress;
 	memcpy(buf + 1, data, count);
-	if(_i2c->write(_address << 1, buf, count + 1, false) != 0) {
+	if(_i2c->writeBytes(_address, buf, count + 1, false) != 0) {
 	    return;
 	}
 }
@@ -1134,12 +1135,12 @@ void Bmi088Accel::writeRegisters(uint8_t subAddress, uint8_t count, const uint8_
 /* reads registers from BMI088 given a starting register address, number of bytes, and a pointer to store data */
 void Bmi088Accel::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest)
 {
-    _i2c->write(_address << 1, (const char *)&subAddress, 1, false);
-    _i2c->read(_address << 1, (char *)dest, count);
+    _i2c->writeBytes(_address << 1, (char *)&subAddress, 1, false);
+    _i2c->readBytes(_address << 1, (char *)dest, count);
 }
 
 /* BMI088 object, input the I2C bus and address */
-Bmi088Gyro::Bmi088Gyro(I2C &bus,uint8_t address)
+Bmi088Gyro::Bmi088Gyro(I2cDevice &bus,uint8_t address)
 {
   _i2c = &bus; // I2C bus
   _address = address; // I2C address
@@ -1154,7 +1155,7 @@ int Bmi088Gyro::begin()
   }
   /* soft reset */
   softReset();
-  ThisThread::sleep_for(50ms);
+  delay_milis(50);
   /* set default range */
   if (!setRange(RANGE_2000DPS)) {
     return -2;
@@ -1176,7 +1177,7 @@ bool Bmi088Gyro::setOdr(Odr odr)
   uint8_t writeReg = 0, readReg = 0;
   writeReg = SET_FIELD(writeReg,GYRO_ODR,odr);
   writeRegister(GYRO_ODR_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(GYRO_ODR_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1187,7 +1188,7 @@ bool Bmi088Gyro::setRange(Range range)
   uint8_t writeReg = 0, readReg = 0;
   writeReg = SET_FIELD(writeReg,GYRO_RANGE,range);
   writeRegister(GYRO_RANGE_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(GYRO_RANGE_ADDR,1,&readReg);
   if (readReg == writeReg) {
     switch (range) {
@@ -1254,7 +1255,7 @@ bool Bmi088Gyro::pinModeInt3(PinMode mode, PinLevel level)
   }
   writeReg = SET_FIELD(readReg,GYRO_INT3_IO_CTRL,(pin_mode | active_lvl));
   writeRegister(GYRO_INT3_IO_CTRL_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(GYRO_INT3_IO_CTRL_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1295,7 +1296,7 @@ bool Bmi088Gyro::pinModeInt4(PinMode mode, PinLevel level)
   }
   writeReg = SET_FIELD(readReg,GYRO_INT4_IO_CTRL,(pin_mode | active_lvl));
   writeRegister(GYRO_INT4_IO_CTRL_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(GYRO_INT4_IO_CTRL_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1307,7 +1308,7 @@ bool Bmi088Gyro::mapDrdyInt3(bool enable)
   readRegisters(GYRO_INT3_DRDY_ADDR,1,&readReg);
   writeReg = SET_FIELD(readReg,GYRO_INT3_DRDY,enable);
   writeRegister(GYRO_INT3_DRDY_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(GYRO_INT3_DRDY_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1319,7 +1320,7 @@ bool Bmi088Gyro::mapDrdyInt4(bool enable)
   readRegisters(GYRO_INT4_DRDY_ADDR,1,&readReg);
   writeReg = SET_FIELD(readReg,GYRO_INT4_DRDY,enable);
   writeRegister(GYRO_INT4_DRDY_ADDR,writeReg);
-  ThisThread::sleep_for(1ms);
+  delay_milis(1);
   readRegisters(GYRO_INT4_DRDY_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;
 }
@@ -1376,7 +1377,7 @@ bool Bmi088Gyro::setDrdyInt(bool enable)
   uint8_t value = (enable) ? GYRO_ENABLE_DRDY_INT : GYRO_DIS_DRDY_INT;
   writeReg = SET_FIELD(writeReg,GYRO_INT_CNTRL,value);
   writeRegister(GYRO_INT_CNTRL_ADDR,writeReg);
-  ThisThread::sleep_for(1ms); 
+  delay_milis(1); 
   readRegisters(GYRO_INT_CNTRL_ADDR,1,&readReg);
   return (readReg == writeReg) ? true : false;  
 }
@@ -1387,7 +1388,7 @@ void Bmi088Gyro::softReset()
   uint8_t reg = 0;
   reg = SET_FIELD(reg,GYRO_SOFT_RESET,GYRO_RESET_CMD);
   writeRegister(GYRO_SOFT_RESET_ADDR,reg);
-  ThisThread::sleep_for(50ms);
+  delay_milis(50);
 }
 
 /* checks the BMI088 gyro ID */
@@ -1406,7 +1407,7 @@ void Bmi088Gyro::writeRegister(uint8_t subAddress, uint8_t data)
     buf[0] = (char)subAddress;
     buf[1] = (char)data;
 
-    if(_i2c->write(_address << 1, buf, 2, false) != 0) {
+    if(_i2c->writeBytes(_address << 1, buf, 2, false) != 0) {
         return;
     }
 }
@@ -1414,12 +1415,12 @@ void Bmi088Gyro::writeRegister(uint8_t subAddress, uint8_t data)
 /* reads registers from BMI088 given a starting register address, number of bytes, and a pointer to store data */
 void Bmi088Gyro::readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest)
 {
-    _i2c->write(_address << 1, (const char *)&subAddress, 1, false);
-    _i2c->read(_address << 1, (char *)dest, count);
+    _i2c->writeBytes(_address << 1, (char *)&subAddress, 1, false);
+    _i2c->readBytes(_address << 1, (char *)dest, count);
 }
 
 /* BMI088 object, input the I2C bus and address */
-Bmi088::Bmi088(I2C &bus,uint8_t accel_addr,uint8_t gyro_addr)
+Bmi088::Bmi088(I2cDevice &bus,uint8_t accel_addr,uint8_t gyro_addr)
 {
   accel = new Bmi088Accel(bus,accel_addr);
   gyro = new Bmi088Gyro(bus,gyro_addr);
@@ -1660,10 +1661,10 @@ bool Bmi088::writeFeatureConfig()
   unsigned int index_step = 16;
   // deactivate accel
   accel->setPower(false);
-  ThisThread::sleep_for(100ms);
+  delay_milis(100);
   // disable config loading
   accel->writeRegister(ACC_INIT_CTRL_ADDR,ACC_DISABLE);
-  ThisThread::sleep_for(10ms);
+  delay_milis(10);
   // write config file
   for (index = 0; index < sizeof(bmi_feature_config); index+=index_step) {
     msb = (uint8_t)((index / 2) >> 4);
@@ -1674,7 +1675,7 @@ bool Bmi088::writeFeatureConfig()
   }
   // enable config loading
   accel->writeRegister(ACC_INIT_CTRL_ADDR,1);
-  ThisThread::sleep_for(1500ms);
+  delay_milis(1500);
   // check config initialization status
   accel->readRegisters(ACC_INTERNAL_STATUS_ADDR,1,&status);
   // reactivate accel
