@@ -1348,19 +1348,19 @@ void Bmi088Gyro::readSensor()
 }
 
 /* returns the x gyro, rad/s */
-float Bmi088Gyro::getGyroX_rads()
+float Bmi088Gyro::getGyroX_deg()
 {
   return gyro_rads[0];
 }
 
 /* returns the y gyro, rad/s */
-float Bmi088Gyro::getGyroY_rads()
+float Bmi088Gyro::getGyroY_deg()
 {
   return gyro_rads[1];
 }
 
 /* returns the z gyro, rad/s */
-float Bmi088Gyro::getGyroZ_rads()
+float Bmi088Gyro::getGyroZ_deg()
 {
   return gyro_rads[2];
 }
@@ -1641,17 +1641,17 @@ uint64_t Bmi088::getTime_ps()
 
 float Bmi088::getGyroX_rads()
 {
-  return gyro->getGyroX_rads();
+  return gyro->getGyroX_deg();
 }
 
 float Bmi088::getGyroY_rads()
 {
-  return gyro->getGyroY_rads();
+  return gyro->getGyroY_deg();
 }
 
 float Bmi088::getGyroZ_rads()
 {
-  return gyro->getGyroZ_rads();
+  return gyro->getGyroZ_deg();
 }
 
 bool Bmi088::writeFeatureConfig()

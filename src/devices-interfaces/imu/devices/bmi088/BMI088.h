@@ -237,9 +237,9 @@ class Bmi088Gyro {
     bool mapDrdyInt4(bool enable);
     bool getDrdyStatus();
     void readSensor();
-    float getGyroX_rads();
-    float getGyroY_rads();
-    float getGyroZ_rads();
+    float getGyroX_deg();
+    float getGyroY_deg();
+    float getGyroZ_deg();
     // check id
     bool isCorrectId();
   private:

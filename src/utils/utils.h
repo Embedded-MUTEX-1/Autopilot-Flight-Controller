@@ -8,6 +8,9 @@
 #include <cstdint>
 #include <cstddef>
 
+#define RAD_TO_DEG (180 / 3.14159265358979323846)
+#define DEG_TO_RAD (3.14159265358979323846 / 180)
+
 void delay_milis(uint32_t milis);
 uint32_t get_ms_count();
 float map_(float x, float in_min, float in_max, float out_min, float out_max);

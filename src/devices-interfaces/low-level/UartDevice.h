@@ -13,6 +13,7 @@ public:
     int8_t init(uint8_t uartNum, uint16_t txPin, uint16_t rxPin, unsigned long baud);
     int8_t deinit();
 
+    void flush();
     size_t numBytesAvailable();
     char readByte();
     void readBytesUntil(char * buf, char endChar, size_t len);
