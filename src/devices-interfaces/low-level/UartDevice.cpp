@@ -25,6 +25,10 @@ int8_t UartDevice::deinit()
     return 0;
 }
 
+void UartDevice::flush() {
+    serialPort->flush();
+}
+
 size_t UartDevice::numBytesAvailable()
 {
     return serialPort->available();

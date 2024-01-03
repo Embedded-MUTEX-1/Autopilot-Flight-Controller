@@ -10,6 +10,7 @@
 #include <Arduino.h>
 
 class PwmDevice {
+public:
     PwmDevice();
     int8_t init();
     int8_t initPin(uint16_t channel, uint16_t pinNum, float pwmFreq);

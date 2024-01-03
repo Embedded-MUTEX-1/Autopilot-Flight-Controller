@@ -6,6 +6,7 @@
 #include <Arduino.h>
 
 class IoDevice {
+public:
     IoDevice();
     int8_t init();
     void setPinMode(uint16_t pinNum, bool mode);
