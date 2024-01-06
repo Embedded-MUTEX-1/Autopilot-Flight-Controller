@@ -82,7 +82,7 @@ struct pidNavigationConfig {
 
 struct receiverData {
     std::string status;
-    uint16_t chan[14];
+    uint16_t chan[NUMBER_OF_CHANNELS];
     uint64_t loopPeriod;
 };
 
@@ -97,7 +97,7 @@ struct altitudeConfig {
     float pAltitude, iAltitude, dAltitude;
 };
 
-struct positioningData {
+struct gpsData {
     std::string status;
     unsigned long TOW;
     double vn;

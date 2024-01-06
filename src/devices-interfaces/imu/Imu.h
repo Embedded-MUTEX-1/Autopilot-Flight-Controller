@@ -26,9 +26,9 @@ private:
     Bmi088Accel* accel;
     Bmi088Gyro* gyro;
     IST8310* mag;
-    int16_t magMaxAxisX = 135, magMinAxisX = -151;
-    int16_t magMaxAxisY = 150, magMinAxisY =  -159;
-    int16_t magMaxAxisZ = 131, magMinAxisZ = -166;
+    int16_t magMaxAxisX, magMinAxisX;
+    int16_t magMaxAxisY, magMinAxisY;
+    int16_t magMaxAxisZ, magMinAxisZ;
     float gyroRateOffsetRoll;
     float gyroRateOffsetPitch;
     float gyroRateOffsetYaw;

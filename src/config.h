@@ -6,6 +6,12 @@
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H
 
 #define NUMBER_OF_MOTORS 4 // 4 or 6
+#define NUMBER_OF_CHANNELS 14
 #define ENABLE_MAG_CALIBRATION 1
+
+#define THROTTLE_CHAN         2
+#define ROLL_CHAN             0
+#define PITCH_CHAN            1
+#define YAW_CHAN              3
 
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H
