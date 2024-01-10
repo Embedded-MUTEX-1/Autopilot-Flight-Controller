@@ -8,36 +8,24 @@ Imu::~Imu() {
 
 }
 
-uint8_t Imu::init() {
-    if(!accel->begin())
+int8_t Imu::init() {
+    if(accel->init() != -1)
         return -1;
-    if(!gyro->begin())
+    if(!gyro->init() != -1)
         return -1;
-    if(!gyro->setRange(Bmi088Gyro::RANGE_1000DPS))
-        return -1;
-    if(!accel->setRange(Bmi088Accel::RANGE_6G))
-        return -1;
-    if(!gyro->setOdr(Bmi088Gyro::ODR_400HZ_BW_47HZ))
-        return -1;
-    if(!accel->setOdr(Bmi088Accel::ODR_400HZ_BW_40HZ))
-        return -1;
-    if(!mag->init())
+    if(!mag->init() != -1)
         return -1;
 
     return 0;
 }
 
-uint8_t Imu::deinit() {
+int8_t Imu::deinit() {
     return 0;
 }
 
-uint8_t Imu::updateAndGetData(struct imuData &values) {
-    int16_t magAxisX = 0;
-    int16_t magAxisY = 0;
-    int16_t magAxisZ = 0;
-
-    gyro->readSensor();
-    accel->readSensor();
+int8_t Imu::updateAndGetData(struct imuData &values) {
+    gyro->updateAndGetData(values);
+    accel->updateAndGetData(values);
 
     values.gyroRateRoll = gyro->getGyroX_deg() - gyroRateOffsetRoll; // deg/s
     values.gyroRatePitch = gyro->getGyroY_deg() - gyroRateOffsetPitch; // deg/s
@@ -47,18 +35,12 @@ uint8_t Imu::updateAndGetData(struct imuData &values) {
     values.accRatePitch = (accel->getAccelY_mss()) - accRateOffsetPitch;
     values.accRateYaw = (accel->getAccelZ_mss()) - accRateOffsetYaw;
 
-    if(mag->isDataRdy()) {
-        mag->read(&magAxisX, &magAxisY, &magAxisZ);
-
-        magAxisY += compass_offset_y;                              //Add the y-offset to the raw value.
-        magAxisY *= compass_scale_y;                               //Scale the y-value so it matches the other axis.
-        magAxisZ += compass_offset_z;                              //Add the z-offset to the raw value.
-        magAxisZ *= compass_scale_z;                               //Scale the z-value so it matches the other axis.
-        magAxisX += compass_offset_x;                              //Add the x-offset to the raw value.
-
-        values.magX = magAxisX;
-        values.magY = magAxisY;
-        values.magZ = magAxisZ;
+    if(mag->updateAndGetData(values)) {
+        values.magY += compass_offset_y;                              //Add the y-offset to the raw value.
+        values.magY *= compass_scale_y;                               //Scale the y-value so it matches the other axis.
+        values.magZ += compass_offset_z;                              //Add the z-offset to the raw value.
+        values.magZ *= compass_scale_z;                               //Scale the z-value so it matches the other axis.
+        values.magX += compass_offset_x;                              //Add the x-offset to the raw value.
     }
 
     return 0;
@@ -99,46 +81,40 @@ void Imu::imuCalibration(uint16_t calibNum) {
 }
 
 void Imu::magCalibration(uint16_t time) {
-    int16_t magAxisX = 0;
-    int16_t magAxisY = 0;
-    int16_t magAxisZ = 0;
+    struct imuData values;
 
 #if ENABLE_MAG_CALIBRATION == 1
-    mag->dataRequest();
-	while(!mag->isDataRdy());
-	mag->read(&magAxisX, &magAxisY, &magAxisZ);           					   //Read the raw compass values.
+	while(mag->updateAndGetData(values) != 0);        					   //Read the raw compass values.
 
-	magMinAxisX = magAxisX;
-	magMaxAxisX = magAxisX;
+	magMinAxisX = values.magX;
+	magMaxAxisX = values.magX;
 
-	magMinAxisY = magAxisY;
-	magMaxAxisY = magAxisY;
+	magMinAxisY = values.magY;
+	magMaxAxisY = values.magY;
 
-	magMinAxisZ = magAxisZ;
-	magMaxAxisZ = magAxisZ;
+	magMinAxisZ = values.magZ;
+	magMaxAxisZ = values.magZ;
 
 	for(int i = 0;i < time;i++) {                                                 //Stay in this loop until the pilot lowers the pitch stick of the transmitter.                                                 //Send telemetry data to the ground station.
-	    mag->dataRequest();
-	    while(!mag->isDataRdy());
-		mag->read(&magAxisX, &magAxisY, &magAxisZ);           					   //Read the raw compass values.
+	    while(mag->updateAndGetData(values) != 0);          					  //Read the raw compass values.
 
-	    magAxisX *= -1;
-	    magAxisY *= -1;
+	    values.magX *= -1;
+	    values.magY *= -1;
 	    //In the following lines the maximum and minimum compass values are detected and stored.
-	    if (magAxisX < magMinAxisX)
-	    	magMinAxisX = magAxisX;
-	    if (magAxisX > magMaxAxisX)
-	    	magMaxAxisX = magAxisX;
+	    if (values.magX < magMinAxisX)
+	    	magMinAxisX = values.magX;
+	    if (values.magX > magMaxAxisX)
+	    	magMaxAxisX = values.magX;
 
-	    if (magAxisY < magMinAxisY)
-	    	magMinAxisY = magAxisY;
-	    if (magAxisY > magMaxAxisY)
-	    	magMaxAxisY = magAxisY;
+	    if (values.magY < magMinAxisY)
+	    	magMinAxisY = values.magY;
+	    if (values.magY > magMaxAxisY)
+	    	magMaxAxisY = values.magY;
 
-	    if (magAxisZ < magMinAxisZ)
-	    	magMinAxisZ = magAxisZ;
-	    if (magAxisZ > magMaxAxisZ)
-	    	magMaxAxisZ = magAxisZ;
+	    if (values.magZ < magMinAxisZ)
+	    	magMinAxisZ = values.magZ;
+	    if (values.magZ > magMaxAxisZ)
+	    	magMaxAxisZ = values.magZ;
 	}
 #endif
 

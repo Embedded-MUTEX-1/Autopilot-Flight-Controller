@@ -17,9 +17,9 @@ public:
     Imu(I2cDevice* i2c);
     ~Imu();
 
-    uint8_t init();
-    uint8_t deinit();
-    uint8_t updateAndGetData(struct imuData &values);
+    int8_t init();
+    int8_t deinit();
+    int8_t updateAndGetData(struct imuData &values);
     void imuCalibration(uint16_t calibNum);
     void magCalibration(uint16_t time);
 private:

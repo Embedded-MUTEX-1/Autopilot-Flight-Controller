@@ -16,9 +16,9 @@ public:
     Gps(UartDevice* uartDevice);
     ~Gps();
 
-    uint8_t init();
-    uint8_t deinit();
-    uint8_t updateAndGetData(struct gpsData &values);
+    int8_t init();
+    int8_t deinit();
+    int8_t updateAndGetData(struct gpsData &values);
 private:
     MicroNMEA* decoder;
     UartDevice* uartDevice;

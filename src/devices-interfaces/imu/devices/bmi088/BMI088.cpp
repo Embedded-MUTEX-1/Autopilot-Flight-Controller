@@ -648,6 +648,32 @@ int Bmi088Accel::begin()
   return 0;
 }
 
+int8_t Bmi088Accel::init()
+{
+    if(!begin())
+        return -1;
+    if(!setRange(Bmi088Accel::RANGE_6G))
+        return -1;
+    if(!setOdr(Bmi088Accel::ODR_400HZ_BW_40HZ))
+        return -1;
+
+    return 0;
+}
+
+int8_t Bmi088Accel::deinit()
+{
+    return 0;
+}
+
+int8_t Bmi088Accel::updateAndGetData(imuData &values)
+{
+    values.accRateRoll = getAccelX_mss();
+    values.accRatePitch = getAccelY_mss();
+    values.accRateYaw = getAccelZ_mss();
+
+    return 0;
+}
+
 /* sets the BMI088 output data rate */
 bool Bmi088Accel::setOdr(Odr odr)
 {
@@ -1169,6 +1195,33 @@ int Bmi088Gyro::begin()
     return -4;
   }
   return 0;
+}
+
+int8_t Bmi088Gyro::init()
+{
+    if(!begin())
+        return -1;
+    if(!setRange(Bmi088Gyro::RANGE_1000DPS))
+        return -1;
+    if(!setOdr(Bmi088Gyro::ODR_400HZ_BW_47HZ))
+        return -1;
+
+    return 0;
+}
+
+int8_t Bmi088Gyro::deinit()
+{
+    return 0;
+}
+
+int8_t Bmi088Gyro::updateAndGetData(imuData &values)
+{
+    readSensor();
+
+    values.gyroRateRoll = getGyroX_deg(); // deg/s
+    values.gyroRatePitch = getGyroY_deg(); // deg/s
+    values.gyroRateYaw = getGyroZ_deg(); // deg/s
+    return 0;
 }
 
 /* sets the BMI088 output data rate */

@@ -10,6 +10,7 @@
 
 IST8310::IST8310() {
 	// TODO Auto-generated constructor stub
+	isDataRequested = false;
 }
 
 void IST8310::setI2cInterface(I2cDevice* w) {
@@ -24,7 +25,7 @@ bool IST8310::isConnected(){
 	return false;
 }
 
-int IST8310::init() {
+int8_t IST8310::init() {
 	if(!isConnected())
 		return -1;
 
@@ -55,6 +56,11 @@ int IST8310::init() {
 	return 0;
 }
 
+int8_t IST8310::deinit()
+{
+    return 0;
+}
+
 bool IST8310::isDataRdy() {
 	uint8_t data = 0;
 	read_regs((unsigned char)Register::STAT1, (unsigned char*)&data, 1);
@@ -83,8 +89,24 @@ int8_t IST8310::write_regs(uint8_t reg_addr,uint8_t *data, uint16_t len) {
 	return 0;
 }
 
-void IST8310::dataRequest() {
-	uint8_t data = 0x01;
+int8_t IST8310::updateAndGetData(struct imuData &values)
+{
+	if(!isDataRequested) {
+		dataRequest();
+		isDataRequested = true;
+	}
+
+	if(!isDataRdy())
+		return -1;
+
+	read(&values.magX, &values.magY, &values.magZ);
+	isDataRequested = false;
+	return 0;
+}
+
+void IST8310::dataRequest()
+{
+    uint8_t data = 0x01;
 	write_regs((unsigned char)Register::CNTL1, (unsigned char*)&data, 1);
 }
 

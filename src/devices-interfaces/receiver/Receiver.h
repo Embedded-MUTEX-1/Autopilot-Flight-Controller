@@ -16,9 +16,9 @@ public:
     Receiver(UartDevice& serial);
     ~Receiver();
 
-    uint8_t init();
-    uint8_t deinit();
-    uint8_t updateAndGetData(struct receiverData &values);
+    int8_t init();
+    int8_t deinit();
+    int8_t updateAndGetData(struct receiverData &values);
 private:
     IBusBM* ibus;
 };

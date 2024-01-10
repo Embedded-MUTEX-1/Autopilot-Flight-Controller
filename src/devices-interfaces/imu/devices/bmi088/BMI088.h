@@ -28,10 +28,12 @@
 #include <cstdint>
 #include <cmath>
 #include "../../../../utils/utils.h"
+#include "../../../Device.h"
+#include "../../../../structs.h"
 
 #define M_PI 3.14159265358979323846
 
-class Bmi088Accel {
+class Bmi088Accel : public Device<struct imuData>{
   public:
     enum Range {
       RANGE_3G = 0x00,
@@ -75,6 +77,9 @@ class Bmi088Accel {
     };
     Bmi088Accel(I2cDevice &bus, uint8_t address);
     int begin();
+    int8_t init() override;
+    int8_t deinit() override;
+    int8_t updateAndGetData(struct imuData &values) override;
     bool setOdr(Odr odr);
     bool setRange(Range range);
     bool pinModeInt1(PinMode mode, PinLevel level);
@@ -200,7 +205,7 @@ class Bmi088Accel {
     void readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest);
 };
 
-class Bmi088Gyro {
+class Bmi088Gyro : public Device<struct imuData> {
   public:
     enum Range {
       RANGE_2000DPS = 0x00,
@@ -229,6 +234,9 @@ class Bmi088Gyro {
     };
     Bmi088Gyro(I2cDevice &w, uint8_t address);
     int begin();
+    int8_t init() override;
+    int8_t deinit() override;
+    int8_t updateAndGetData(struct imuData &values) override;
     bool setOdr(Odr odr);
     bool setRange(Range range);
     bool pinModeInt3(PinMode mode, PinLevel level);

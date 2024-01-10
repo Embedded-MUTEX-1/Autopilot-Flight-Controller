@@ -13,15 +13,15 @@ Gps::~Gps() {
 
 }
 
-uint8_t Gps::init() {
+int8_t Gps::init() {
     return 0;
 }
 
-uint8_t Gps::deinit() {
+int8_t Gps::deinit() {
     return 0;
 }
 
-uint8_t Gps::updateAndGetData(gpsData &values) {
+int8_t Gps::updateAndGetData(gpsData &values) {
     char c;
     while(uartDevice->numBytesAvailable() > 0) {
         c = uartDevice->readByte();
