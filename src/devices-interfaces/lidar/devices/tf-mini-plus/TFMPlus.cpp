@@ -83,18 +83,20 @@
  */
 
 #include "TFMPlus.h"
+#include "../../../../utils/utils.h"
 //#include <Wire.h>          //  Future I2C Implementation
 
 // Constructor
-TFMPlus::TFMPlus(){}
+TFMPlus::TFMPlus(UartDevice *streamPtr){
+    pStream = streamPtr;          // Save reference to stream/serial object.
+}
 TFMPlus::~TFMPlus(){}
 
 // Return TRUE/FALSE whether receiving serial data from
 // device, and set system status to provide more information.
-bool TFMPlus::begin(UartDevice *streamPtr)
+bool TFMPlus::begin()
 {
-    pStream = streamPtr;          // Save reference to stream/serial object.
-    delay( 10);                   // Delay for device data in serial buffer.
+    delay_milis( 10);                   // Delay for device data in serial buffer.
     if( (*pStream).numBytesAvailable() > 0)   // If data present...
     {
         status = TFMP_READY;      // set status to READY
@@ -377,4 +379,27 @@ void TFMPlus::printReply()
       Serial.print( reply[ i], HEX);
     }
     Serial.println();
+}
+
+int8_t TFMPlus::init() {
+    if(!begin())
+        return -1;
+    return 0;
+}
+
+int8_t TFMPlus::deinit() {
+    return 0;
+}
+
+int8_t TFMPlus::updateAndGetData(altitudeData &values) {
+    int16_t tfDist = 0;    // Distance to object in centimeters
+    int16_t tfFlux = 0;    // Strength or quality of return signal
+    int16_t tfTemp = 0;    // Internal temperature of Lidar sensor chip
+
+    if(!getData( tfDist, tfFlux, tfTemp)) // Get data from the device.
+        return -1;
+
+    values.alt = (float)tfDist * 100.0f;
+
+    return 0;
 }

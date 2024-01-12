@@ -93,7 +93,7 @@ struct altitudeData {
     uint64_t loopPeriod;
 };
 
-struct altitudeConfig {
+struct pidAltitudeConfig {
     float pAltitude, iAltitude, dAltitude;
 };
 

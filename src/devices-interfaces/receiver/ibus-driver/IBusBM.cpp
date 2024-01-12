@@ -84,8 +84,7 @@ extern "C" {
     Checksum: DA F3 -> calculated by adding up all previous bytes, total must be FFFF
  */
 
-void IBusBM::begin(UartDevice &serial, int8_t timerid, int8_t rxPin, int8_t txPin) {
-  this->stream = &serial;
+void IBusBM::begin(int8_t timerid, int8_t rxPin, int8_t txPin) {
   this->state = DISCARD;
   this->last = get_ms_count();
   this->ptr = 0;
@@ -191,4 +190,26 @@ uint8_t IBusBM::addSensor(uint8_t type, uint8_t len) {
 void IBusBM::setSensorMeasurement(uint8_t adr, int32_t value) {
    if (adr<=NumberSensors && adr>0)
      sensors[adr-1].sensorValue = value;
+}
+
+int8_t IBusBM::init() {
+    begin();
+    return 0;
+}
+
+int8_t IBusBM::deinit() {
+    return 0;
+}
+
+size_t IBusBM::update() {
+    this->loop();
+    return 0;
+}
+
+IBusBM::IBusBM(UartDevice &serial) {
+    this->stream = &serial;
+}
+
+IBusBM::~IBusBM() {
+    deinit();
 }

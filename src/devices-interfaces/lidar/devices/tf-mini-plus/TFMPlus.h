@@ -81,6 +81,8 @@
 
 #include <inttypes.h>
 #include "../../../low-level/UartDevice.h"
+#include "../../../Device.h"
+#include "../../../../structs.h"
 
 // Buffer sizes
 #define TFMP_FRAME_SIZE         9   // Size of data frame = 9 bytes
@@ -186,17 +188,19 @@
 #define    FRAME_1000         0x03E8
 
 // Object Class Definitions
-class TFMPlus
+class TFMPlus : public Device<struct altitudeData>
 {
   public:
-    TFMPlus();
+    TFMPlus(UartDevice *streamPtr);
     ~TFMPlus();
 
     uint8_t version[ 3];   // to save firmware version
     uint8_t status;        // to save library error status
 
+
+
     // Return T/F whether serial data available, set error status if not.
-    bool begin( UartDevice *streamPtr);
+    bool begin();
     // Read device data and pass back three values
     bool getData( int16_t &dist, int16_t &flux, int16_t &temp);
     // Short version, passes back distance data only
@@ -210,7 +214,11 @@ class TFMPlus
     void printReply();    
     bool getResponse();
 
-  private:
+    int8_t init() override;
+    int8_t deinit() override;
+    int8_t updateAndGetData(altitudeData &values) override;
+
+private:
     UartDevice* pStream;      // pointer to the device serial stream
     // The data buffers are one byte longer than necessary
     // because we read one byte into the last position, then

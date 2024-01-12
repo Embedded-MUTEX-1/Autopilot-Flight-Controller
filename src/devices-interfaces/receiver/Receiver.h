@@ -20,7 +20,7 @@ public:
     int8_t deinit();
     int8_t updateAndGetData(struct receiverData &values);
 private:
-    IBusBM* ibus;
+    ReceiverInterface* ibus;
 };
 
 

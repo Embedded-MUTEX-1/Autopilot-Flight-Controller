@@ -6,9 +6,9 @@
 template <typename T> 
 struct Device
 {
-    virtual int8_t init();
-    virtual int8_t deinit();
-    virtual int8_t updateAndGetData(T &values);
+    virtual int8_t init() = 0;
+    virtual int8_t deinit() = 0;
+    virtual int8_t updateAndGetData(T &values) = 0;
 };
 
 

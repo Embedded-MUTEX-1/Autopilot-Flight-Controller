@@ -13,6 +13,7 @@
 
 #include <inttypes.h>
 #include "../../low-level/UartDevice.h"
+#include "../ReceiverInterface.h"
 
 // if you have an opentx transciever you can add additional sensor types here.
 // see https://github.com/cleanflight/cleanflight/blob/7cd417959b3cb605aa574fc8c0f16759943527ef/src/main/telemetry/ibus_shared.h
@@ -26,15 +27,25 @@
 
 #define IBUSBM_NOTIMER -1 // no timer interrupt used
 
-class IBusBM {
+class IBusBM : public ReceiverInterface {
 
 public:
-  void begin(UartDevice& serial, int8_t timerid=0, int8_t rxPin=-1, int8_t txPin=-1);
-  uint16_t readChannel(uint8_t channelNr); // read servo channel 0..9
+    IBusBM(UartDevice &serial);
+    ~IBusBM();
+
+    void begin(int8_t timerid=0, int8_t rxPin=-1, int8_t txPin=-1);
+  uint16_t readChannel(uint8_t channelNr) override; // read servo channel 0..9
   uint8_t addSensor(uint8_t type, uint8_t len=2); // add sensor type and data length (2 or 4), returns address
   void setSensorMeasurement(uint8_t adr, int32_t value);
 
-  void loop(void); // used internally for interrupt handline, but needs to be defined as public
+  void loop(void);
+
+    int8_t init() override;
+
+    int8_t deinit() override;
+
+    size_t update() override;
+    // used internally for interrupt handline, but needs to be defined as public
   
   volatile uint8_t cnt_poll; // count received number of sensor poll messages
   volatile uint8_t cnt_sensor; // count times a sensor value has been sent back

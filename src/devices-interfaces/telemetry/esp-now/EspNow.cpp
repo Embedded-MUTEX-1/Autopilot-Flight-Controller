@@ -10,7 +10,6 @@
 EspNow::EspNow() {
     numBytesAvailable = 0;
     index = 0;
-    memset(rxBuffer, '\0', sizeof(rxBuffer));
 }
 
 EspNow::~EspNow() {
@@ -38,10 +37,15 @@ size_t EspNow::dataAvailable() {
     return numBytesAvailable;
 }
 
-void EspNow::readAllBytes(char *buf) {
-    memcpy(buf, rxBuffer, numBytesAvailable);
-    numBytesAvailable = 0;
-    index = 0;
+size_t EspNow::readAllBytes(char *buf) {
+    size_t len = rxBuffer.size();
+
+    for (int i = 0; i < rxBuffer.size(); ++i) {
+        buf[i] = rxBuffer.front();
+        rxBuffer.pop();
+    }
+
+    return len;
 }
 
 void EspNow::sendBytes(char *buf, size_t len) {
@@ -64,11 +68,16 @@ void EspNow::OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 }
 
 void EspNow::OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
-    if((numBytesAvailable + len) >= sizeof(rxBuffer))
-        return;
-    memcpy(&rxBuffer[index], incomingData, len);
-    index += len;
-    numBytesAvailable += len;
+    if(rxBuffer.size() >= MAX_BUFFER_SIZE)
+        rxBuffer.pop();
+
+    for (int i = 0; i < len; ++i) {
+        rxBuffer.push((char)incomingData[i]);
+    }
+}
+
+int8_t EspNow::deinit() {
+    return 0;
 }
 
 #endif //ARDUINO

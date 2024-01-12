@@ -10,7 +10,7 @@
 #include "../low-level/I2cDevice.h"
 #include "devices/bmi088/BMI088.h"
 #include "devices/ist8310/IST8310.h"
-#include "structs.h"
+#include "../../structs.h"
 
 class Imu {
 public:
@@ -23,9 +23,9 @@ public:
     void imuCalibration(uint16_t calibNum);
     void magCalibration(uint16_t time);
 private:
-    Bmi088Accel* accel;
-    Bmi088Gyro* gyro;
-    IST8310* mag;
+    Device<imuData>* accel;
+    Device<imuData>* gyro;
+    Device<imuData>* mag;
     int16_t magMaxAxisX, magMinAxisX;
     int16_t magMaxAxisY, magMinAxisY;
     int16_t magMaxAxisZ, magMinAxisZ;

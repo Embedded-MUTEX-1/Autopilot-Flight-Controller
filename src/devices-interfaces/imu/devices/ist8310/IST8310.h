@@ -18,7 +18,7 @@
 
 class IST8310 : public Device<struct imuData> {
 public:
-	IST8310();
+	IST8310(I2cDevice* w);
 	void setI2cInterface(I2cDevice* w);
 	bool isConnected();
 	int8_t init() override;

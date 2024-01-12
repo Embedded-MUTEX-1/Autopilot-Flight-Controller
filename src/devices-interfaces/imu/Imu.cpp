@@ -9,11 +9,11 @@ Imu::~Imu() {
 }
 
 int8_t Imu::init() {
-    if(accel->init() != -1)
+    if(accel->init() != 0)
         return -1;
-    if(!gyro->init() != -1)
+    if(!gyro->init() != 0)
         return -1;
-    if(!mag->init() != -1)
+    if(!mag->init() != 0)
         return -1;
 
     return 0;
@@ -27,13 +27,13 @@ int8_t Imu::updateAndGetData(struct imuData &values) {
     gyro->updateAndGetData(values);
     accel->updateAndGetData(values);
 
-    values.gyroRateRoll = gyro->getGyroX_deg() - gyroRateOffsetRoll; // deg/s
-    values.gyroRatePitch = gyro->getGyroY_deg() - gyroRateOffsetPitch; // deg/s
-    values.gyroRateYaw = gyro->getGyroZ_deg() - gyroRateOffsetYaw; // deg/s
+    values.gyroRateRoll -= gyroRateOffsetRoll; // deg/s
+    values.gyroRatePitch -= gyroRateOffsetPitch; // deg/s
+    values.gyroRateYaw -= gyroRateOffsetYaw; // deg/s
 
-    values.accRateRoll = (accel->getAccelX_mss()) - accRateOffsetRoll;
-    values.accRatePitch = (accel->getAccelY_mss()) - accRateOffsetPitch;
-    values.accRateYaw = (accel->getAccelZ_mss()) - accRateOffsetYaw;
+    values.accRateRoll -= accRateOffsetRoll;
+    values.accRatePitch -= accRateOffsetPitch;
+    values.accRateYaw -= accRateOffsetYaw;
 
     if(mag->updateAndGetData(values)) {
         values.magY += compass_offset_y;                              //Add the y-offset to the raw value.
@@ -49,8 +49,7 @@ int8_t Imu::updateAndGetData(struct imuData &values) {
 Imu::Imu(I2cDevice *i2c) {
     accel = new Bmi088Accel(*i2c, 0x19);
     gyro = new Bmi088Gyro(*i2c, 0x69);
-    mag = new IST8310();
-    mag->setI2cInterface(i2c);
+    mag = new IST8310(i2c);
 
     magMaxAxisX = 135; magMinAxisX = -151;
     magMaxAxisY = 150; magMinAxisY = -159;
@@ -65,13 +64,14 @@ Imu::Imu(I2cDevice *i2c) {
 }
 
 void Imu::imuCalibration(uint16_t calibNum) {
+    struct imuData values;
     for (size_t i = 0; i < calibNum; i++)
     {
-        gyro->readSensor();
+        gyro->updateAndGetData(values);
 
-        gyroRateOffsetRoll += gyro->getGyroX_deg();
-        gyroRateOffsetPitch += gyro->getGyroY_deg();
-        gyroRateOffsetYaw += gyro->getGyroZ_deg();
+        gyroRateOffsetRoll += values.gyroRateRoll;
+        gyroRateOffsetPitch += values.gyroRatePitch;
+        gyroRateOffsetYaw += values.gyroRateYaw;
 
         delay_milis(4);
     }

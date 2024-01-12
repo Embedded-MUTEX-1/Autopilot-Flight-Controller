@@ -8,8 +8,8 @@
 #include "IST8310.h"
 #include "string.h"
 
-IST8310::IST8310() {
-	// TODO Auto-generated constructor stub
+IST8310::IST8310(I2cDevice* w) {
+    this->w = w;
 	isDataRequested = false;
 }
 
