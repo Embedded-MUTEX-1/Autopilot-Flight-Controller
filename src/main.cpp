@@ -9,6 +9,7 @@ void setup() {
 }
 
 void loop() {
+    // TODO disable Loop task
     digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
     delay_milis(100); 
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
