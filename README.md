@@ -2,8 +2,8 @@ The goal of this project is to build a flight controller with GPS navigation bas
 
 Project status:
 - Low-level interfaces (Done)
-- Devices interfaces (In progress)
-- Controllers (Pending)
+- Devices interfaces (Done, note: Barometer interface is not implemented)
+- Modules (In progress)
 - Telemetry (Pending)
 
 Technologies used:
