@@ -14,4 +14,5 @@ Technologies used:
 - Pub/Sub system for communication between task modules
 
 Software architecture :
-![Autopilot_Architecture](https://github.com/lenny1411/Autopilot-Flight-Controller/assets/105748537/dc5f17bc-2893-4b4b-9791-34d647099f4b)
+![Architecture](https://github.com/lenny1411/Autopilot-Flight-Controller/assets/105748537/7f271d01-1ac2-45c5-8e4c-3a17ef811279)
+
