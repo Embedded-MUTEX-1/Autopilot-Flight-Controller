@@ -19,13 +19,13 @@ public:
 
     int8_t init();
     int8_t deinit();
-    int8_t updateAndGetData(struct imuData &values);
+    int8_t updateAndGetData(struct attitudeData &values);
     void imuCalibration(uint16_t calibNum);
     void magCalibration(uint16_t time);
 private:
-    Device<imuData>* accel;
-    Device<imuData>* gyro;
-    Device<imuData>* mag;
+    Device<attitudeData>* accel;
+    Device<attitudeData>* gyro;
+    Device<attitudeData>* mag;
     int16_t magMaxAxisX, magMinAxisX;
     int16_t magMaxAxisY, magMinAxisY;
     int16_t magMaxAxisZ, magMinAxisZ;

@@ -19,4 +19,18 @@
 #define WIFI_AP_SSID   "Autopilot Drone"
 #define WIFI_AP_PASSWD "12345678"
 
+#define SCL_PIN 22
+#define SDA_PIN 21
+
+#define ATTITUDE_LOOP_FREQ   250 // Hz
+#define PID_LOOP_FREQ        250 // Hz
+#define MOTORS_LOOP_FREQ     250 // Hz
+#define ALTITUDE_LOOP_FREQ   100 // Hz
+#define POSITION_LOOP_FREQ    10 // Hz
+#define COMMANDER_LOOP_FREQ   50 // Hz
+#define RECEIVER_LOOP_FREQ   100 // Hz
+#define TELEMETRY_LOOP_FREQ   25 // Hz
+
+#define MAGNETIC_DECLINATION  1 // deg
+
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H

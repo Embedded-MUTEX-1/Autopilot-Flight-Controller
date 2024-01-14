@@ -1,4 +1,5 @@
 #include "I2cDevice.h"
+#include "config.h"
 #include <Arduino.h>
 #include <Wire.h>
 
@@ -14,7 +15,7 @@ I2cDevice::~I2cDevice()
 
 int8_t I2cDevice::init()
 {
-    bool ret = Wire.begin(21, 22, 400000);
+    bool ret = Wire.begin(SDA_PIN, SCL_PIN, 400000);
     return ret ? 0 : -1;
 }
 

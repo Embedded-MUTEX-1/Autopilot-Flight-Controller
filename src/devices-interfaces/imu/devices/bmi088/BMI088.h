@@ -33,7 +33,7 @@
 
 #define M_PI 3.14159265358979323846
 
-class Bmi088Accel : public Device<struct imuData>{
+class Bmi088Accel : public Device<struct attitudeData>{
   public:
     enum Range {
       RANGE_3G = 0x00,
@@ -79,7 +79,7 @@ class Bmi088Accel : public Device<struct imuData>{
     int begin();
     int8_t init() override;
     int8_t deinit() override;
-    int8_t updateAndGetData(struct imuData &values) override;
+    int8_t updateAndGetData(struct attitudeData &values) override;
     bool setOdr(Odr odr);
     bool setRange(Range range);
     bool pinModeInt1(PinMode mode, PinLevel level);
@@ -205,7 +205,7 @@ class Bmi088Accel : public Device<struct imuData>{
     void readRegisters(uint8_t subAddress, uint8_t count, uint8_t* dest);
 };
 
-class Bmi088Gyro : public Device<struct imuData> {
+class Bmi088Gyro : public Device<struct attitudeData> {
   public:
     enum Range {
       RANGE_2000DPS = 0x00,
@@ -236,7 +236,7 @@ class Bmi088Gyro : public Device<struct imuData> {
     int begin();
     int8_t init() override;
     int8_t deinit() override;
-    int8_t updateAndGetData(struct imuData &values) override;
+    int8_t updateAndGetData(struct attitudeData &values) override;
     bool setOdr(Odr odr);
     bool setRange(Range range);
     bool pinModeInt3(PinMode mode, PinLevel level);

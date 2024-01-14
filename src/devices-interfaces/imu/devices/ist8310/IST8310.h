@@ -16,14 +16,14 @@
 #include "../../../Device.h"
 #include "../../../../structs.h"
 
-class IST8310 : public Device<struct imuData> {
+class IST8310 : public Device<struct attitudeData> {
 public:
 	IST8310(I2cDevice* w);
 	void setI2cInterface(I2cDevice* w);
 	bool isConnected();
 	int8_t init() override;
 	int8_t deinit() override;
-	int8_t updateAndGetData(struct imuData &values) override;
+	int8_t updateAndGetData(struct attitudeData &values) override;
 	void dataRequest();
 	bool isDataRdy();
 	int8_t read(int16_t* axisX, int16_t* axisY, int16_t* axisZ);

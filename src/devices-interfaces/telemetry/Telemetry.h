@@ -19,11 +19,9 @@ public:
     int8_t deinit();
 
     int8_t sendTelemetryValues(
-            struct imuData &imu,
             struct attitudeData &attitude,
             struct altitudeData &altitude,
-            struct gpsData &gps,
-            struct naviagtionData &navigation,
+            struct positionData &position,
             struct pidOutput &pid,
             struct receiverData &receiver,
             struct motorsData &motors,

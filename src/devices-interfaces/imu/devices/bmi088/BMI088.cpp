@@ -665,7 +665,7 @@ int8_t Bmi088Accel::deinit()
     return 0;
 }
 
-int8_t Bmi088Accel::updateAndGetData(imuData &values)
+int8_t Bmi088Accel::updateAndGetData(attitudeData &values)
 {
     values.accRateRoll = getAccelX_mss();
     values.accRatePitch = getAccelY_mss();
@@ -1214,7 +1214,7 @@ int8_t Bmi088Gyro::deinit()
     return 0;
 }
 
-int8_t Bmi088Gyro::updateAndGetData(imuData &values)
+int8_t Bmi088Gyro::updateAndGetData(attitudeData &values)
 {
     readSensor();
 

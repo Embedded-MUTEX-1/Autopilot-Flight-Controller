@@ -21,31 +21,31 @@ int8_t Telemetry::deinit() {
     return wifiManager.deinit();
 }
 
-int8_t Telemetry::sendTelemetryValues(imuData &imu, attitudeData &attitude, altitudeData &altitude, gpsData &gps,
-                                      naviagtionData &navigation, struct pidOutput &pid, receiverData &receiver, motorsData &motors, struct commanderState commander) {
+int8_t Telemetry::sendTelemetryValues(struct attitudeData &attitude, struct altitudeData &altitude, struct positionData &position,
+                                      struct pidOutput &pid, struct receiverData &receiver, struct motorsData &motors, struct commanderState commander) {
     StaticJsonDocument<1200> documentTx;
 
     documentTx["roll"].set(attitude.roll);
     documentTx["pitch"].set(attitude.pitch);
     documentTx["yaw"].set(attitude.yaw);
 
-    documentTx["gyroRoll"].set(imu.gyroRateRoll);
-    documentTx["gyroPitch"].set(imu.gyroRatePitch);
-    documentTx["gyroYaw"].set(imu.gyroRateYaw);
+    documentTx["gyroRoll"].set(attitude.gyroRateRoll);
+    documentTx["gyroPitch"].set(attitude.gyroRatePitch);
+    documentTx["gyroYaw"].set(attitude.gyroRateYaw);
 
-    documentTx["accRoll"].set(imu.accRateRoll);
-    documentTx["accPitch"].set(imu.accRatePitch);
-    documentTx["accYaw"].set(imu.accRateYaw);
+    documentTx["accRoll"].set(attitude.accRateRoll);
+    documentTx["accPitch"].set(attitude.accRatePitch);
+    documentTx["accYaw"].set(attitude.accRateYaw);
 
     documentTx["loopTime"].set(pid.loopRate);
     documentTx["alt"].set(altitude.alt);
     documentTx["vBat"].set(motors.vBat);
 
-    documentTx["lat"].set(gps.lat);
-    documentTx["lon"].set(gps.lon);
+    documentTx["lat"].set(position.lat);
+    documentTx["lon"].set(position.lon);
 
-    documentTx["lat_home"].set(navigation.latitude_home);
-    documentTx["lon_home"].set(navigation.longitude_home);
+    documentTx["lat_home"].set(position.latitude_home);
+    documentTx["lon_home"].set(position.longitude_home);
 
     documentTx["status"].set(commander.state);
 

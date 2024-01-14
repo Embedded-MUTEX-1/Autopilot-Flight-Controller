@@ -14,8 +14,7 @@ enum droneState {
     DISARMED = 0, MANU, LEVEL, POS_HOLD, NAVIGATION
 };
 
-struct imuData {
-    std::string status;
+struct attitudeData {
     float gyroRateRoll;
     float gyroRatePitch;
     float gyroRateYaw;
@@ -25,10 +24,6 @@ struct imuData {
     int16_t magX;
     int16_t magY;
     int16_t magZ;
-    uint64_t loopPeriod;
-};
-
-struct attitudeData {
     float roll;
     float pitch;
     float yaw;
@@ -46,6 +41,7 @@ struct attitudeConfig {
     float offsetYaw;
     float heading;
     float param1, param2;
+    bool newConfig;
 };
 
 struct imuSetpoint {
@@ -64,12 +60,17 @@ struct pidOutput {
     uint64_t loopRate;
 };
 
-struct naviagtionData {
+struct positionData {
     std::string status;
     float latitude_home = 0.0f;
     float longitude_home = 0.0f;
-    float setpoint_lat = 0.0f;
-    float setpoint_lon = 0.0f;
+    unsigned long TOW;
+    double vn;
+    double ve;
+    double vd;
+    double lat;
+    double lon;
+    double alt;
     uint64_t loopPeriod;
 };
 
@@ -77,12 +78,14 @@ struct pidConfig {
     float proll, ppitch, pyaw;
     float iroll, ipitch, iyaw;
     float droll, dpitch, dyaw;
+    bool newConfig;
 };
 
 struct pidNavigationConfig {
     float pnav, inav, dnav;
     float maxRollAngle, maxPitchAngle;
     float minRollAngle, minPitchAngle;
+    bool newConfig;
 };
 
 struct receiverData {
@@ -100,18 +103,7 @@ struct altitudeData {
 
 struct pidAltitudeConfig {
     float pAltitude, iAltitude, dAltitude;
-};
-
-struct gpsData {
-    std::string status;
-    unsigned long TOW;
-    double vn;
-    double ve;
-    double vd;
-    double lat;
-    double lon;
-    double alt;
-    uint64_t loopPeriod;
+    bool newConfig;
 };
 
 struct motorsData {
@@ -122,6 +114,7 @@ struct motorsData {
 
 struct motorsConfig {
     uint16_t mot[NUMBER_OF_MOTORS];
+    bool enable;
 };
 
 struct commanderState {

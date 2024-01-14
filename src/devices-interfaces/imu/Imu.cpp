@@ -23,7 +23,7 @@ int8_t Imu::deinit() {
     return 0;
 }
 
-int8_t Imu::updateAndGetData(struct imuData &values) {
+int8_t Imu::updateAndGetData(struct attitudeData &values) {
     gyro->updateAndGetData(values);
     accel->updateAndGetData(values);
 
@@ -64,7 +64,7 @@ Imu::Imu(I2cDevice *i2c) {
 }
 
 void Imu::imuCalibration(uint16_t calibNum) {
-    struct imuData values;
+    struct attitudeData values;
     for (size_t i = 0; i < calibNum; i++)
     {
         gyro->updateAndGetData(values);
@@ -81,7 +81,7 @@ void Imu::imuCalibration(uint16_t calibNum) {
 }
 
 void Imu::magCalibration(uint16_t time) {
-    struct imuData values;
+    struct attitudeData values;
 
 #if ENABLE_MAG_CALIBRATION == 1
 	while(mag->updateAndGetData(values) != 0);        					   //Read the raw compass values.

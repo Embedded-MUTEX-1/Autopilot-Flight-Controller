@@ -89,7 +89,7 @@ int8_t IST8310::write_regs(uint8_t reg_addr,uint8_t *data, uint16_t len) {
 	return 0;
 }
 
-int8_t IST8310::updateAndGetData(struct imuData &values)
+int8_t IST8310::updateAndGetData(struct attitudeData &values)
 {
 	if(!isDataRequested) {
 		dataRequest();

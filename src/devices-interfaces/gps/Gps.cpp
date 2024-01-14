@@ -21,7 +21,7 @@ int8_t Gps::deinit() {
     return 0;
 }
 
-int8_t Gps::updateAndGetData(gpsData &values) {
+int8_t Gps::updateAndGetData(positionData &values) {
     char c;
     while(uartDevice->numBytesAvailable() > 0) {
         c = uartDevice->readByte();
