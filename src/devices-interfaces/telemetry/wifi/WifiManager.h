@@ -7,6 +7,15 @@
 
 #include "../WirelessInterface.h"
 #include <string>
+#include <WiFiServer.h>
+#include <WiFi.h>
+#include "../../../utils/utils.h"
+
+const IPAddress local_IP(192, 168, 1, 100);
+const IPAddress gateway( 192, 168, 1, 100);
+const IPAddress subnet(  255, 255, 255, 0);
+
+const size_t MAX_SIZE = 600;
 
 class WifiManager : public WirelessInterface {
 public:
@@ -21,11 +30,12 @@ public:
     void sendBytes(char * buf, size_t len) override;
 private:
     /* Allow to connect to a WIFI station by providing SSID and password in AP mode */
-    int8_t startAccesPoint(std::string ssid, std::string password);
-    bool waitDataFromWifiApAvailable();
+    int8_t startAccesPoint(const char *ssid, const char *password);
+    void waitDataFromWifiApAvailable();
     void readDataFromWifiAp(char* buf);
-    void extractSsidAndPasswd(char* buf, std::string ssid, std::string password);
-    void connectToWifiStation(std::string ssid, std::string password);
+    void extractSsidAndPasswd(char* buf, char *ssid, char *password);
+    bool connectToWifiStation(const char *ssid, const char *password);
+    WiFiUDP udp;
 };
 
 

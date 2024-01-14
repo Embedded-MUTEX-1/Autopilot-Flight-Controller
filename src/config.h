@@ -14,4 +14,9 @@
 #define PITCH_CHAN            1
 #define YAW_CHAN              3
 
+#define UDP_PORT 5000
+#define WIFI_CONNECTING_TIMEOUT 10000 // 10 sec
+#define WIFI_AP_SSID   "Autopilot Drone"
+#define WIFI_AP_PASSWD "12345678"
+
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H

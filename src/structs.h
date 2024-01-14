@@ -10,6 +10,10 @@
 #include <string>
 #include "config.h"
 
+enum droneState {
+    DISARMED = 0, MANU, LEVEL, POS_HOLD, NAVIGATION
+};
+
 struct imuData {
     std::string status;
     float gyroRateRoll;
@@ -57,6 +61,7 @@ struct pidOutput {
     int16_t outYaw;
     int16_t outAltitude;
     int16_t outBatteryCompensation;
+    uint64_t loopRate;
 };
 
 struct naviagtionData {
@@ -112,6 +117,15 @@ struct gpsData {
 struct motorsData {
     std::string status;
     uint16_t mot[NUMBER_OF_MOTORS];
+    float vBat;
+};
+
+struct motorsConfig {
+    uint16_t mot[NUMBER_OF_MOTORS];
+};
+
+struct commanderState {
+    enum droneState state;
 };
 
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_STRUCTS_H

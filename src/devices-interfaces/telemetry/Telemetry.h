@@ -8,8 +8,10 @@
 #include <cstdint>
 #include <cstddef>
 #include "../../structs.h"
+#include "devices-interfaces/telemetry/wifi/WifiManager.h"
 
 class Telemetry {
+public:
     Telemetry();
     ~Telemetry();
 
@@ -22,16 +24,22 @@ class Telemetry {
             struct altitudeData &altitude,
             struct gpsData &gps,
             struct naviagtionData &navigation,
+            struct pidOutput &pid,
             struct receiverData &receiver,
-            struct motorsData &motors);
+            struct motorsData &motors,
+            struct commanderState commander);
 
     bool isConfigDataAvailable();
 
-    void getConfigData(
+    int8_t getConfigData(
             struct attitudeConfig *attitude,
             struct pidConfig *pid,
             struct pidAltitudeConfig *altitude,
-            struct pidNavigationConfig *nav);
+            struct pidNavigationConfig *nav,
+            struct motorsConfig *motors,
+            struct commanderState commander);
+private:
+    WifiManager wifiManager;
 };
 
 
