@@ -13,7 +13,7 @@ int8_t PwmDevice::init() {
 }
 
 int8_t PwmDevice::initPin(uint16_t channel, uint16_t pinNum, float pwmFreq) {
-    ledcSetup(channel, pwmFreq, 10);
+    ledcSetup(channel, pwmFreq, 12);
     ledcAttachPin(pinNum, channel);
     return 0;
 }

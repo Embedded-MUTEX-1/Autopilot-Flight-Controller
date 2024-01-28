@@ -74,7 +74,7 @@ bool Telemetry::isConfigDataAvailable() {
 }
 
 int8_t Telemetry::getConfigData(struct attitudeConfig *attitude, struct pidConfig *pid, struct pidAltitudeConfig *altitude,
-                         struct pidNavigationConfig *nav, struct motorsConfig *motors, struct commanderState commander) {
+                                struct pidNavigationConfig *nav, struct motorsSetpoint *motors, struct commanderState commander) {
     char recvBuffer[800];
     StaticJsonDocument<1200> documentRx;
 

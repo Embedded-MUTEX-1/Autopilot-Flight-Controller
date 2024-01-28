@@ -6,8 +6,22 @@
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H
 
 #define NUMBER_OF_MOTORS 4 // 4 or 6
+#define ESC1_PIN 40
+#define ESC2_PIN 39
+#define ESC3_PIN 38
+#define ESC4_PIN 12
+#define ESC5_PIN 11
+#define ESC6_PIN 10
+#define PWM_FREQ 400
 #define NUMBER_OF_CHANNELS 14
 #define ENABLE_MAG_CALIBRATION 1
+
+#define VBAT_PIN 13
+
+#define COEFF_ROLL_FRONT_REAR  1.25
+#define COEFF_ROLL_LEFT_RIGHT  1.5
+#define C_PITCH_FRONT_REAR  1.5
+#define C_YAW  1.333
 
 #define THROTTLE_CHAN         2
 #define ROLL_CHAN             0
@@ -32,5 +46,27 @@
 #define TELEMETRY_LOOP_FREQ   25 // Hz
 
 #define MAGNETIC_DECLINATION  1 // deg
+
+#define LIDAR_UART_PORT           0
+#define LIDAR_UART_TX            43
+#define LIDAR_UART_RX            44
+#define LIDAR_UART_BAUD      115200
+
+#define GPS_UART_PORT             2
+#define GPS_UART_TX              47
+#define GPS_UART_RX              21
+#define GPS_UART_BAUD         57600
+
+#define RECEIVER_UART_PORT        1
+#define RECEIVER_UART_TX         17
+#define RECEIVER_UART_RX         18
+#define RECEIVER_UART_BAUD   115200
+
+#define MAX_ANGLE_RATE 164 // deg/sec
+#define MAX_ANGLE     32.8 // deg
+
+#define MAX_CHANNEL_VALUE 2000
+#define MIN_CHANNEL_VALUE 1000
+#define MIN_THROTTLE_VALUE 950
 
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H

@@ -44,18 +44,18 @@ struct attitudeConfig {
     bool newConfig;
 };
 
-struct imuSetpoint {
+struct pidSetpoint {
     float roll;
     float pitch;
-    float yaw;
+    float yawRate;
 };
 
 struct pidOutput {
     std::string status;
-    int16_t outRoll;
-    int16_t outPitch;
-    int16_t outYaw;
-    int16_t outAltitude;
+    int16_t out_roll;
+    int16_t out_pitch;
+    int16_t out_yaw;
+    int16_t out_alt;
     int16_t outBatteryCompensation;
     uint64_t loopRate;
 };
@@ -65,6 +65,7 @@ struct positionData {
     float latitude_home = 0.0f;
     float longitude_home = 0.0f;
     unsigned long TOW;
+    bool isPositionFix;
     double vn;
     double ve;
     double vd;
@@ -110,9 +111,10 @@ struct motorsData {
     std::string status;
     uint16_t mot[NUMBER_OF_MOTORS];
     float vBat;
+    uint64_t loopPeriod;
 };
 
-struct motorsConfig {
+struct motorsSetpoint {
     uint16_t mot[NUMBER_OF_MOTORS];
     bool enable;
 };

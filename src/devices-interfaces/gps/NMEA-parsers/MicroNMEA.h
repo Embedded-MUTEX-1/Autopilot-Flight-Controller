@@ -84,7 +84,7 @@ class MicroNMEA {
     void clear(void);
 
     /**
-     * @brief Get the navigation system in use
+     * @brief Get the altitude system in use
      * @details `N` = GNSS, `P` = GPS, `L` = GLONASS, `A` = Galileo, `\0` = none
      * @return char
      */

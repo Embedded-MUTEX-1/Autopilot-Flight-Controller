@@ -2,7 +2,7 @@
 // Created by lenny on 14/01/24.
 //
 
-#include "attitude.h"
+#include "attitudeModule.h"
 #include "devices-interfaces/low-level/I2cDevice.h"
 #include "devices-interfaces/imu/Imu.h"
 #include "modules/attitude/attitude-estimators/mahony/MahonyAHRS.h"

@@ -11,17 +11,20 @@
 extern PropertyNode<struct attitudeData> attitudeNode;
 extern PropertyNode<struct attitudeConfig> attitudeConfigNode;
 
-extern PropertyNode<struct positionData> positionNode;
+extern PropertyNode<struct altitudeData> altitudeNode;
 
-extern PropertyNode<struct imuSetpoint> imuSetpointNode;
+extern PropertyNode<struct positionData> positionNode;
+extern PropertyNode<struct receiverData> receiverNode;
+
+extern PropertyNode<struct pidSetpoint> pidSetpointNode;
 extern PropertyNode<struct pidOutput> pidOutputNode;
 
 extern PropertyNode<struct pidConfig> pidConfigNode;
 extern PropertyNode<struct pidNavigationConfig> pidNavConfigNode;
 extern PropertyNode<struct pidAltitudeConfig> pidAltConfigNode;
-extern PropertyNode<struct motorsConfig> motorsConfigNode;
+extern PropertyNode<struct motorsSetpoint> motorsConfigNode;
 
 extern PropertyNode<struct motorsData> motorsNode;
-extern PropertyNode<struct commanderState> stateNode;
+extern PropertyNode<struct commanderState> commanderStateNode;
 
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_NODES_H

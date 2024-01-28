@@ -34,7 +34,7 @@ public:
             struct pidConfig *pid,
             struct pidAltitudeConfig *altitude,
             struct pidNavigationConfig *nav,
-            struct motorsConfig *motors,
+            struct motorsSetpoint *motors,
             struct commanderState commander);
 private:
     WifiManager wifiManager;

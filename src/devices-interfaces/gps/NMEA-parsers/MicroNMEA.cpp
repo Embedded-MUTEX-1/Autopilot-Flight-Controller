@@ -295,7 +295,7 @@ bool MicroNMEA::processGGA(const char *s)
 {
   // If GxGSV messages are received _talker_ID can be changed after
   // other MicroNMEA sentences. Compatibility modes can set the talker ID
-  // to indicate GPS regardless of actual navigation system used.
+  // to indicate GPS regardless of actual altitude system used.
   _navSystem = _talkerID;
 
   s = parseTime(s);
@@ -351,7 +351,7 @@ bool MicroNMEA::processRMC(const char* s)
 {
   // If GxGSV messages are received _talker_ID can be changed after
   // other MicroNMEA sentences. Compatibility modes can set the talker
-  // ID to indicate GPS regardless of actual navigation system used.
+  // ID to indicate GPS regardless of actual altitude system used.
   _navSystem = _talkerID;
 
   s = parseTime(s);

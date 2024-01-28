@@ -8,14 +8,17 @@ PropertyNode<struct attitudeData> attitudeNode;
 PropertyNode<struct attitudeConfig> attitudeConfigNode;
 
 PropertyNode<struct positionData> positionNode;
+PropertyNode<struct altitudeData> altitudeNode;
 
-PropertyNode<struct imuSetpoint> imuSetpointNode;
+PropertyNode<struct receiverData> receiverNode;
+
+PropertyNode<struct pidSetpoint> pidSetpointNode;
 PropertyNode<struct pidOutput> pidOutputNode;
 
 PropertyNode<struct pidConfig> pidConfigNode;
 PropertyNode<struct pidNavigationConfig> pidNavConfigNode;
 PropertyNode<struct pidAltitudeConfig> pidAltConfigNode;
-PropertyNode<struct motorsConfig> motorsConfigNode;
+PropertyNode<struct motorsSetpoint> motorsConfigNode;
 
 PropertyNode<struct motorsData> motorsNode;
-PropertyNode<struct commanderState> stateNode;
+PropertyNode<struct commanderState> commanderStateNode;
