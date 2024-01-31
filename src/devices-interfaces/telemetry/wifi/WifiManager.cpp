@@ -68,7 +68,7 @@ void WifiManager::readDataFromWifiAp(char *buf) {
 
 void WifiManager::extractSsidAndPasswd(char *buf, char *ssid, char *password) {
     strcpy(ssid, strtok(buf, ","));
-    strcpy(ssid, strtok(NULL, ","));
+    strcpy(password, strtok(NULL, ","));
 }
 
 bool WifiManager::connectToWifiStation(const char *ssid, const char *password) {
