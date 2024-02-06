@@ -11,9 +11,9 @@
 #include <WiFi.h>
 #include "../../../utils/utils.h"
 
-const IPAddress local_IP(192, 168, 1, 100);
-const IPAddress gateway( 192, 168, 1, 100);
-const IPAddress subnet(  255, 255, 255, 0);
+const IPAddress LOCAL_IP(192, 168, 1, 100);
+const IPAddress GATEWAY( 192, 168, 1, 100);
+const IPAddress SUBNET(  255, 255, 255, 0);
 
 const size_t MAX_SIZE = 600;
 

@@ -23,6 +23,7 @@ extern PropertyNode<struct pidConfig> pidConfigNode;
 extern PropertyNode<struct pidNavigationConfig> pidNavConfigNode;
 extern PropertyNode<struct pidAltitudeConfig> pidAltConfigNode;
 extern PropertyNode<struct motorsSetpoint> motorsConfigNode;
+extern PropertyNode<struct navigationSetpoint> navigationSetpointNode;
 
 extern PropertyNode<struct motorsData> motorsNode;
 extern PropertyNode<struct commanderState> commanderStateNode;

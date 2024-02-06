@@ -45,7 +45,7 @@ void attitudeTask(void *args) {
         values.roll     = ahrs.getRoll()  - config.offsetRoll;
         values.pitch    = ahrs.getPitch() - config.offsetPitch;
         values.yaw      = ahrs.getYaw()   - config.offsetYaw;
-        values.heading -= config.heading;
+        values.heading -= 0;
 
         if(config.newConfig) {
             ahrs.setConfig(config.param1, config.param2);

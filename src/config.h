@@ -5,6 +5,24 @@
 #ifndef AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H
 
+#define P_NAV 2.7 
+#define I_NAV 0
+#define D_NAV 0
+
+#define P_ROLL_PITCH 1.4 
+#define I_ROLL_PITCH 0.001
+#define D_ROLL_PITCH 0
+
+#define P_YAW 4
+#define I_YAW 0
+#define D_YAW 0
+
+#define P_ALT 2.7 
+#define I_ALT 0
+#define D_ALT 0
+
+#define MAX_NAV_ANGLE     32.8 // deg
+
 #define NUMBER_OF_MOTORS 4 // 4 or 6
 #define ESC1_PIN 40
 #define ESC2_PIN 39
@@ -40,7 +58,7 @@
 #define PID_LOOP_FREQ        250 // Hz
 #define MOTORS_LOOP_FREQ     250 // Hz
 #define ALTITUDE_LOOP_FREQ   100 // Hz
-#define POSITION_LOOP_FREQ    10 // Hz
+#define NAVIGATION_LOOP_FREQ  10 // Hz
 #define COMMANDER_LOOP_FREQ   50 // Hz
 #define RECEIVER_LOOP_FREQ   100 // Hz
 #define TELEMETRY_LOOP_FREQ   25 // Hz
@@ -64,6 +82,7 @@
 
 #define MAX_ANGLE_RATE 164 // deg/sec
 #define MAX_ANGLE     32.8 // deg
+#define MAX_NAV_ANGLE 32.8 / 2 // deg
 
 #define MAX_CHANNEL_VALUE 2000
 #define MIN_CHANNEL_VALUE 1000

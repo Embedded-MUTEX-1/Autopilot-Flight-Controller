@@ -49,7 +49,7 @@ void WifiManager::sendBytes(char *buf, size_t len) {
 }
 
 int8_t WifiManager::startAccesPoint(const char *ssid, const char *password) {
-    if(!WiFi.softAPConfig(local_IP, gateway, subnet))
+    if(!WiFi.softAPConfig(LOCAL_IP, GATEWAY, SUBNET))
         return -1;
     if(!WiFi.softAP(ssid, password))
         return -1;

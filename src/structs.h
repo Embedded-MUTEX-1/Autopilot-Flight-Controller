@@ -119,6 +119,13 @@ struct motorsSetpoint {
     bool enable;
 };
 
+struct navigationSetpoint
+{
+    double lat;
+    double lon;
+};
+
+
 struct commanderState {
     enum droneState state;
 };

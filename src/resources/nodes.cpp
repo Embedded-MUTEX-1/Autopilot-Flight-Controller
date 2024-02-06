@@ -19,6 +19,7 @@ PropertyNode<struct pidConfig> pidConfigNode;
 PropertyNode<struct pidNavigationConfig> pidNavConfigNode;
 PropertyNode<struct pidAltitudeConfig> pidAltConfigNode;
 PropertyNode<struct motorsSetpoint> motorsConfigNode;
+PropertyNode<struct navigationSetpoint> navigationSetpointNode;
 
 PropertyNode<struct motorsData> motorsNode;
 PropertyNode<struct commanderState> commanderStateNode;
