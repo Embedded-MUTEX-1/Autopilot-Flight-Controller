@@ -1,17 +1,26 @@
 #include <Arduino.h>
 #include "utils/utils.h"
+#include "modules/altitude/altitudeModule.h"
+#include "modules/attitude/attitudeModule.h"
+#include "modules/motors/motorsModule.h"
+#include "modules/navigation/navigationModule.h"
+#include "modules/receiver/receiverModule.h"
+#include "modules/telemetry/telemetryModule.h"
 
 #define LED_BUILTIN 2
 
 void setup() {
-    // TODO Init and start tasks
     pinMode(LED_BUILTIN, OUTPUT);
+
+    xTaskCreate(
+        receiverTask,   /* Function to implement the task */
+        "test",         /* Name of the task */
+        10000,          /* Stack size in words */
+        NULL,           /* Task input parameter */
+        1,              /* Priority of the task */
+        NULL);
 }
 
 void loop() {
-    // TODO disable Loop task
-    digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-    delay_milis(100); 
-    digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
-    delay_milis(100);   
+    delay_milis(10000000); 
 }

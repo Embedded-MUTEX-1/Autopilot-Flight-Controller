@@ -23,3 +23,4 @@ PropertyNode<struct navigationSetpoint> navigationSetpointNode;
 
 PropertyNode<struct motorsData> motorsNode;
 PropertyNode<struct commanderState> commanderStateNode;
+PropertyNode<struct commanderState> commanderStateConfNode;

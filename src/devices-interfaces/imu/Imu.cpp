@@ -11,10 +11,15 @@ Imu::~Imu() {
 int8_t Imu::init() {
     if(accel->init() != 0)
         return -1;
-    if(!gyro->init() != 0)
+    if(gyro->init() != 0)
         return -1;
-    if(!mag->init() != 0)
+    if(mag->init() != 0)
         return -1;
+
+    delay_milis(3000);
+
+    imuCalibration(IMU_CALIBRATION_DURATION);
+    //magCalibration(MAG_CALIBRATION_DURATION);
 
     return 0;
 }
@@ -35,7 +40,7 @@ int8_t Imu::updateAndGetData(struct attitudeData &values) {
     values.accRatePitch -= accRateOffsetPitch;
     values.accRateYaw -= accRateOffsetYaw;
 
-    if(mag->updateAndGetData(values)) {
+    if(mag->updateAndGetData(values) == 0) {
         values.magY += compass_offset_y;                              //Add the y-offset to the raw value.
         values.magY *= compass_scale_y;                               //Scale the y-value so it matches the other axis.
         values.magZ += compass_offset_z;                              //Add the z-offset to the raw value.

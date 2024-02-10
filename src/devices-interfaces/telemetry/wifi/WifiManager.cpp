@@ -14,17 +14,19 @@ WifiManager::~WifiManager() {
 }
 
 int8_t WifiManager::init() {
-    char* ssid = NULL;
-    char* password = NULL;
-    char* recvPacket = NULL;
-
+    char ssid[20];
+    char password[20];
+    char recvPacket[50];
+#if DIRECT_CONNECTION == 1
     do {
         startAccesPoint(WIFI_AP_SSID, WIFI_AP_PASSWD);
         waitDataFromWifiApAvailable();
         readDataFromWifiAp(recvPacket);
         extractSsidAndPasswd(recvPacket, ssid, password);
     } while (!connectToWifiStation(ssid, password));
-
+#else
+    connectToWifiStation(WIFI_STA_SSID, WIFI_STA_PASSWD);
+#endif
     udp = WiFiUDP(); // For test
     if(udp.begin(UDP_PORT) != 1)
         return -1;
@@ -45,7 +47,9 @@ size_t WifiManager::readAllBytes(char *buf) {
 }
 
 void WifiManager::sendBytes(char *buf, size_t len) {
+    udp.beginPacket(udp.remoteIP(), udp.remotePort());
     udp.write((const uint8_t *)buf, len);
+    udp.endPacket();
 }
 
 int8_t WifiManager::startAccesPoint(const char *ssid, const char *password) {
@@ -62,8 +66,7 @@ void WifiManager::waitDataFromWifiApAvailable() {
 }
 
 void WifiManager::readDataFromWifiAp(char *buf) {
-    size_t len = udp.parsePacket();
-    udp.readBytesUntil('\n', buf, len);
+    udp.readBytesUntil('\n', buf, 255); // TODO à modifer
 }
 
 void WifiManager::extractSsidAndPasswd(char *buf, char *ssid, char *password) {
@@ -72,16 +75,28 @@ void WifiManager::extractSsidAndPasswd(char *buf, char *ssid, char *password) {
 }
 
 bool WifiManager::connectToWifiStation(const char *ssid, const char *password) {
-    uint16_t timeout = WIFI_CONNECTING_TIMEOUT;
+    uint16_t count = 0; 
+#if DIRECT_CONNECTION == 1
+    udp.beginPacket(udp.remoteIP(), udp.remotePort());
+    udp.print("SSID: ");
+    udp.println(ssid);
+    udp.print("PWD: ");
+    udp.println(password);
+    udp.endPacket();
+
+    delay_milis(2000);
 
     WiFi.softAPdisconnect();
+
+    delay_milis(2000);
+#endif
     WiFi.begin(ssid, password);
 
     while(WiFi.status() != WL_CONNECTED) {
-        if(timeout <= 0)
+        if(count >= WIFI_CONNECTING_TIMEOUT)
             return false;
         delay_milis(1);
-        timeout--;
+        count++;
     }
 
     udp.stop();

@@ -107,7 +107,7 @@ void IBusBM::loop(void) {
   if (IBusBMnext) IBusBMnext->loop(); 
 
   // only process data already in our UART receive buffer 
-  while (stream->numBytesAvailable() == true) {
+  while (stream->numBytesAvailable() > 0) {
     // only consider a new data package if we have not heard anything for >3ms
     uint32_t now = get_ms_count();
     if (now - last >= PROTOCOL_TIMEGAP){

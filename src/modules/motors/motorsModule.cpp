@@ -19,7 +19,9 @@ void motorsTask(void *args) {
     struct motorsData values;
     uint64_t timestamp = 0;
 
-    motors.init();
+    if(motors.init() != 0)
+        while(1) { delay_milis(100); }
+        
     vBatPin.init();
     vBatPin.initPin(VBAT_PIN);
 
@@ -55,6 +57,12 @@ void motorsTask(void *args) {
 
         motors.setMotors(setpoint);
 
+        for (int i = 0; i < NUMBER_OF_MOTORS; i++)
+            values.mot[i] = setpoint.mot[i];
+
+        motorsNode.set(values);
+
         values.loopPeriod = get_ms_count() - timestamp;
+        wait(values.loopPeriod, MOTORS_LOOP_FREQ);
     }
 }

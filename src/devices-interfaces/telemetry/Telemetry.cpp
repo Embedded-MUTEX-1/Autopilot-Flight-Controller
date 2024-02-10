@@ -6,7 +6,7 @@
 #include "../../../lib/ArduinoJson/ArduinoJson.h"
 
 Telemetry::Telemetry() {
-
+    wifiManager = new WifiManager();
 }
 
 Telemetry::~Telemetry() {
@@ -14,17 +14,69 @@ Telemetry::~Telemetry() {
 }
 
 int8_t Telemetry::init() {
-    return wifiManager.init();
+    return wifiManager->init();
 }
 
 int8_t Telemetry::deinit() {
-    return wifiManager.deinit();
+    return wifiManager->deinit();
 }
 
-int8_t Telemetry::sendTelemetryValues(struct attitudeData &attitude, struct altitudeData &altitude, struct positionData &position,
-                                      struct pidOutput &pid, struct receiverData &receiver, struct motorsData &motors, struct commanderState commander) {
+int8_t Telemetry::sendConfigValues(
+    struct attitudeConfig &attitudeConf,
+    struct pidConfig &pidConf,
+    struct pidAltitudeConfig &altitudeConf,
+    struct pidNavigationConfig &navConf
+) {
     StaticJsonDocument<1200> documentTx;
 
+    documentTx["isInitConfig"].set(1);
+
+    documentTx["roll"].set(attitudeConf.offsetRoll);
+    documentTx["pitch"].set(attitudeConf.offsetPitch);
+    documentTx["yaw"].set(attitudeConf.offsetYaw);
+
+    documentTx["proll"].set(pidConf.proll);
+    documentTx["ppitch"].set(pidConf.ppitch);
+    documentTx["pyaw"].set(pidConf.pyaw);
+
+    documentTx["iroll"].set(pidConf.iroll);
+    documentTx["ipitch"].set(pidConf.ipitch);
+    documentTx["iyaw"].set(pidConf.iyaw);;
+
+    documentTx["droll"].set(pidConf.droll);
+    documentTx["dpitch"].set(pidConf.dpitch);
+    documentTx["dyaw"].set(pidConf.dyaw);
+
+    documentTx["pAlt"].set(altitudeConf.pAltitude);
+    documentTx["iAlt"].set(altitudeConf.iAltitude);
+    documentTx["dAlt"].set(altitudeConf.dAltitude);
+
+    documentTx["pnav"].set(navConf.pnav);
+    documentTx["inav"].set(navConf.inav);
+    documentTx["dnav"].set(navConf.dnav);
+
+    char output[800];
+    serializeJson(documentTx, output);
+
+    wifiManager->sendBytes(output, strlen(output));
+
+    documentTx.clear();
+    return 0;
+}
+
+int8_t Telemetry::sendTelemetryValues(
+    struct attitudeData &attitude, 
+    struct altitudeData &altitude, 
+    struct positionData &position,
+    struct pidOutput &pid, 
+    struct receiverData &receiver, 
+    struct motorsData &motors, 
+    struct commanderState &commander, 
+    uint64_t timestamp
+) {
+    StaticJsonDocument<1200> documentTx;
+
+    documentTx["isInitConfig"].set(0);
     documentTx["roll"].set(attitude.roll);
     documentTx["pitch"].set(attitude.pitch);
     documentTx["yaw"].set(attitude.yaw);
@@ -37,15 +89,13 @@ int8_t Telemetry::sendTelemetryValues(struct attitudeData &attitude, struct alti
     documentTx["accPitch"].set(attitude.accRatePitch);
     documentTx["accYaw"].set(attitude.accRateYaw);
 
-    documentTx["loopTime"].set(pid.loopRate);
+    documentTx["loopTime"].set(pid.loopPeriod);
+    documentTx["timestamp"].set(timestamp);
     documentTx["alt"].set(altitude.alt);
     documentTx["vBat"].set(motors.vBat);
 
     documentTx["lat"].set(position.lat);
     documentTx["lon"].set(position.lon);
-
-    documentTx["lat_home"].set(position.latitude_home);
-    documentTx["lon_home"].set(position.longitude_home);
 
     documentTx["status"].set(commander.state);
 
@@ -57,35 +107,41 @@ int8_t Telemetry::sendTelemetryValues(struct attitudeData &attitude, struct alti
         documentTx["ch"][i] = receiver.chan[i];
     }
 
-    char output[800];
+    char output[1000];
     serializeJson(documentTx, output);
 
-    wifiManager.sendBytes(output, strlen(output));
+    wifiManager->sendBytes(output, strlen(output));
 
     documentTx.clear();
     return 0;
 }
 
 bool Telemetry::isConfigDataAvailable() {
-    if(wifiManager.dataAvailable() > 0)
+    if(wifiManager->dataAvailable() > 0)
         return true;
-
     return false;
 }
 
-int8_t Telemetry::getConfigData(struct attitudeConfig *attitude, struct pidConfig *pid, struct pidAltitudeConfig *altitude,
-                                struct pidNavigationConfig *nav, struct motorsSetpoint *motors, struct commanderState commander) {
-    char recvBuffer[800];
+int8_t Telemetry::getConfigData(
+    struct attitudeConfig *attitude,
+    struct pidConfig *pid,
+    struct pidAltitudeConfig *altitude,
+    struct pidNavigationConfig *navConf,
+    struct motorsSetpoint *motors,
+    struct navigationSetpoint *navSetpoint,
+    struct commanderState *commander) 
+{
+    char recvBuffer[1000];
     StaticJsonDocument<1200> documentRx;
 
-    wifiManager.readAllBytes(recvBuffer);
+    wifiManager->readAllBytes(recvBuffer);
 
     DeserializationError err = deserializeJson(documentRx, recvBuffer);
 
     if(err != DeserializationError::Ok)
         return -1;
 
-    commander.state = (enum droneState)documentRx["state"].as<int>();
+    commander->state = (enum droneState)documentRx["state"].as<int>();
 
     attitude->offsetRoll = documentRx["roll"].as<float>();
     attitude->offsetPitch = documentRx["pitch"].as<float>();
@@ -102,6 +158,17 @@ int8_t Telemetry::getConfigData(struct attitudeConfig *attitude, struct pidConfi
     pid->droll = documentRx["droll"].as<float>();
     pid->dpitch = documentRx["dpitch"].as<float>();
     pid->dyaw = documentRx["dyaw"].as<float>();
+
+    altitude->pAltitude = documentRx["pAlt"].as<float>();
+    altitude->iAltitude = documentRx["iAlt"].as<float>();
+    altitude->dAltitude = documentRx["dAlt"].as<float>();
+
+    navConf->pnav = documentRx["pAlt"].as<float>();
+    navConf->inav = documentRx["iAlt"].as<float>();
+    navConf->dnav = documentRx["dAlt"].as<float>();
+
+    navSetpoint->lat = documentRx["lat"].as<float>();
+    navSetpoint->lon = documentRx["lon"].as<float>();
 
     attitude->param1 = documentRx["param1"].as<float>();
     attitude->param2 = documentRx["param2"].as<float>();

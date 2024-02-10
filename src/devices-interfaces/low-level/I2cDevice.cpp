@@ -29,7 +29,7 @@ int8_t I2cDevice::readByte(uint8_t addr, char * value, bool stop)
 {
     int8_t ret;
 
-    ret = Wire.requestFrom(addr, 1);  
+    ret = Wire.requestFrom(addr, 1, stop);  
     while(Wire.available()) {
         *value = Wire.read();    // Receive a byte as character
     }
@@ -40,7 +40,7 @@ int8_t I2cDevice::readBytes(uint8_t addr, char * buf, size_t len, bool stop)
 {
     int8_t ret;
     unsigned int count = 0;
-    ret = Wire.requestFrom(addr, len);  
+    ret = Wire.requestFrom(addr, len, stop);  
     while(Wire.available()) {
         buf[count] = Wire.read();    // Receive a byte as character
         count++;
@@ -52,7 +52,7 @@ int8_t I2cDevice::writeByte(uint8_t addr, char value, bool stop)
 {
     Wire.beginTransmission(addr); // transmit to device #4
     Wire.write(value);
-    return Wire.endTransmission();    // stop transmitting
+    return Wire.endTransmission(stop);    // stop transmitting
 }
 
 int8_t I2cDevice::writeBytes(uint8_t addr, char * buf, size_t len, bool stop)
@@ -62,5 +62,5 @@ int8_t I2cDevice::writeBytes(uint8_t addr, char * buf, size_t len, bool stop)
     {
         Wire.write(buf[i]);
     }
-    return Wire.endTransmission();    // stop transmitting
+    return Wire.endTransmission(stop);    // stop transmitting
 }

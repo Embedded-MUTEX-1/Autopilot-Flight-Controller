@@ -10,6 +10,13 @@ void delay_milis(uint32_t milis) {
     vTaskDelay(milis / portTICK_PERIOD_MS);
 }
 
+void wait(uint32_t currentLoopDuration, uint16_t loopFreq) {
+    int16_t diff = (1.0f / (float)loopFreq) * 1000 - currentLoopDuration;
+    for (int16_t count = 0; count < diff; count++) {
+             delay_milis(1);
+    }
+}
+
 uint32_t get_ms_count() {
     return xTaskGetTickCount();
 }

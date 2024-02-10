@@ -27,5 +27,6 @@ extern PropertyNode<struct navigationSetpoint> navigationSetpointNode;
 
 extern PropertyNode<struct motorsData> motorsNode;
 extern PropertyNode<struct commanderState> commanderStateNode;
+extern PropertyNode<struct commanderState> commanderStateConfNode;
 
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_NODES_H

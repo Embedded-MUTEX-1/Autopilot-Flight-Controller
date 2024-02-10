@@ -1,0 +1,8 @@
+#ifndef AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_TELEMETRYRMODULE_H
+#define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_TELEMETRYRMODULE_H
+
+#include <cstdint>
+
+void telemtryTask(void *args);
+
+#endif

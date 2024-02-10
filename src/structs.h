@@ -57,7 +57,7 @@ struct pidOutput {
     int16_t out_yaw;
     int16_t out_alt;
     int16_t outBatteryCompensation;
-    uint64_t loopRate;
+    uint64_t loopPeriod;
 };
 
 struct positionData {

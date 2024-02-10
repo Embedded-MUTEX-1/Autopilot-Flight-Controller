@@ -13,8 +13,8 @@ class PwmDevice {
 public:
     PwmDevice();
     int8_t init();
-    int8_t initPin(uint16_t channel, uint16_t pinNum, float pwmFreq);
-    void setPin(uint16_t channel, uint16_t pinNum, uint16_t dutyCycle);
+    int8_t initPin(uint8_t channel, uint8_t pinNum, float pwmFreq);
+    void setPin(uint8_t channel, uint8_t pinNum, uint16_t dutyCycle);
 };
 
 

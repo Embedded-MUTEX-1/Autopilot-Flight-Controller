@@ -17,7 +17,8 @@ void receiverTask(void *args) {
     uint64_t timestamp = 0;
 
     uart.init(RECEIVER_UART_PORT, RECEIVER_UART_TX, RECEIVER_UART_RX, RECEIVER_UART_BAUD);
-    receiver.init();
+    if(receiver.init() != 0)
+        while(1) { delay_milis(100); }
 
     while(1) {
         timestamp = get_ms_count();
@@ -30,10 +31,12 @@ void receiverTask(void *args) {
         setpoint.yawRate = computeYawRateFromChannel(values.chan[YAW_CHAN]);
 
         receiverNode.set(values);
+
         if(state.state == LEVEL)
             pidSetpointNode.set(setpoint);
 
         values.loopPeriod = get_ms_count() - timestamp;
+        wait(values.loopPeriod, RECEIVER_LOOP_FREQ);
     }
 }
 

@@ -22,6 +22,7 @@ public:
 private:
     MicroNMEA* decoder;
     UartDevice* uartDevice;
+    char nmeaBuffer[500];
 };
 
 

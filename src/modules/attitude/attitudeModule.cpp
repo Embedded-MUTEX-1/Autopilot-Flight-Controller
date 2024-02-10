@@ -19,12 +19,13 @@ void attitudeTask(void *args) {
     uint64_t timestamp = 0;
 
     i2c.init();
-    imu.init();
+    if(imu.init() != 0)
+        while(1) { delay_milis(100); }
+        
     ahrs.begin(ATTITUDE_LOOP_FREQ);
 
     while(1) {
         timestamp = get_ms_count();
-        delay_milis((1 / ATTITUDE_LOOP_FREQ) * 1000);
 
         attitudeConfigNode.get(config);
         imu.updateAndGetData(values);
@@ -45,7 +46,6 @@ void attitudeTask(void *args) {
         values.roll     = ahrs.getRoll()  - config.offsetRoll;
         values.pitch    = ahrs.getPitch() - config.offsetPitch;
         values.yaw      = ahrs.getYaw()   - config.offsetYaw;
-        values.heading -= 0;
 
         if(config.newConfig) {
             ahrs.setConfig(config.param1, config.param2);
@@ -55,6 +55,7 @@ void attitudeTask(void *args) {
         attitudeNode.set(values);
 
         values.loopPeriod = get_ms_count() - timestamp;
+        wait(values.loopPeriod, ATTITUDE_LOOP_FREQ);
     }
 }
 

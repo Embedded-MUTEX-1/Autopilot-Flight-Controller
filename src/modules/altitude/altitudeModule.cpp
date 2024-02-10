@@ -15,17 +15,17 @@ void altitudeTask(void *args) {
     uint64_t timestamp = 0;
 
     uart.init(LIDAR_UART_PORT, LIDAR_UART_TX, LIDAR_UART_RX, LIDAR_UART_BAUD);
-    lidar.init();
+    if(lidar.init() != 0)
+        while(1) { delay_milis(100); }
 
     while(1) {
         timestamp = get_ms_count();
-
-        delay_milis((1 / ATTITUDE_LOOP_FREQ) * 1000);
 
         lidar.updateAndGetData(values);
 
         altitudeNode.set(values);
 
         values.loopPeriod = get_ms_count() - timestamp;
+        wait(values.loopPeriod, ALTITUDE_LOOP_FREQ);
     }
 }

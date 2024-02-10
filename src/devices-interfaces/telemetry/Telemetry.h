@@ -18,6 +18,13 @@ public:
     int8_t init();
     int8_t deinit();
 
+    int8_t sendConfigValues(
+        struct attitudeConfig &attitudeConf,
+        struct pidConfig &pidConf,
+        struct pidAltitudeConfig &altitudeConf,
+        struct pidNavigationConfig &navConf);
+
+
     int8_t sendTelemetryValues(
             struct attitudeData &attitude,
             struct altitudeData &altitude,
@@ -25,7 +32,8 @@ public:
             struct pidOutput &pid,
             struct receiverData &receiver,
             struct motorsData &motors,
-            struct commanderState commander);
+            struct commanderState &commander,
+            uint64_t timestamp);
 
     bool isConfigDataAvailable();
 
@@ -33,11 +41,12 @@ public:
             struct attitudeConfig *attitude,
             struct pidConfig *pid,
             struct pidAltitudeConfig *altitude,
-            struct pidNavigationConfig *nav,
+            struct pidNavigationConfig *navConf,
             struct motorsSetpoint *motors,
-            struct commanderState commander);
+            struct navigationSetpoint *navSetpoint,
+            struct commanderState *commander);
 private:
-    WifiManager wifiManager;
+    WirelessInterface *wifiManager;
 };
 
 

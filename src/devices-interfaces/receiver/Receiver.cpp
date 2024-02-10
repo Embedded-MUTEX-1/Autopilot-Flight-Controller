@@ -6,7 +6,7 @@
 
 Receiver::Receiver(UartDevice& serial) {
     ibus = new IBusBM(serial);
-    ibus->init();
+    
 }
 
 Receiver::~Receiver() {
@@ -14,7 +14,7 @@ Receiver::~Receiver() {
 }
 
 int8_t Receiver::init() {
-    return 0;
+    return ibus->init();
 }
 
 int8_t Receiver::deinit() {

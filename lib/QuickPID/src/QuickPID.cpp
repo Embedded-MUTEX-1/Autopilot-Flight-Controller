@@ -5,7 +5,6 @@
  **********************************************************************************/
 
 #include "QuickPID.h"
-#include "../../../src/utils/utils.h"
 
 /* Constructor ********************************************************************
    The parameters specified here are those for for which we can't set up
@@ -293,4 +292,13 @@ uint8_t QuickPID::GetDmode() {
 }
 uint8_t QuickPID::GetAwMode() {
   return static_cast<uint8_t>(iawmode);
+}
+
+float QuickPID::constrain_(float value, float min, float max) {
+    if(value < min)
+        return min;
+    else if(value > max)
+        return max;
+    else
+        return value;
 }

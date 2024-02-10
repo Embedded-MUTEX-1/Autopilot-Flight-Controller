@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include <utils/utils.h>
 
 #ifndef QuickPID_h
 #define QuickPID_h
@@ -33,6 +32,8 @@ class QuickPID {
     // Sets PID mode to manual (0), automatic (1), timer (2) or toggle manual/automatic (3).
     void SetMode(Control Mode);
     void SetMode(uint8_t Mode);
+
+    float constrain_(float value, float min, float max);
 
     // Performs the PID calculation. It should be called every time loop() cycles ON/OFF and calculation frequency
     // can be set using SetMode and SetSampleTime respectively.

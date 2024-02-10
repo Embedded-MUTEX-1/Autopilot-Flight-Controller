@@ -5,16 +5,18 @@
 #include "Motors.h"
 
 int8_t Motors::init() {
-    for(int i = 0; i < NUMBER_OF_MOTORS; i++) {
-        pwmDevices[i].init();
-        pwmDevices[i].initPin(i, pins[i], PWM_FREQ);
-        setPulse(i, MIN_THROTTLE_VALUE);
+    uint8_t index = 0;
+    for(index = 0; index < NUMBER_OF_MOTORS; index++) {
+        pwmDevices[index].init();
+        pwmDevices[index].initPin(index, pins[index], PWM_FREQ);
+        setPulse(index, MIN_THROTTLE_VALUE);
     }
 }
 
 void Motors::setMotors(struct motorsSetpoint setpoint) {
-    for(int i = 0; i < NUMBER_OF_MOTORS; i++)
-        setPulse(i, setpoint.mot[i]);
+    uint8_t index = 0;
+    for(index = 0; index < NUMBER_OF_MOTORS; index++)
+        setPulse(index, setpoint.mot[index]);
 }
 
 int8_t Motors::initPin(uint8_t motorIndex, uint8_t pin, float pwmFreq) {

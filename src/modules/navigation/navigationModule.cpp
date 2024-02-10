@@ -25,10 +25,11 @@ void navigationTask(void *args) {
     uint64_t timestamp = 0;
 
     uart.init(GPS_UART_PORT, GPS_UART_TX, GPS_UART_RX, GPS_UART_BAUD);
-    gps.init();
+    if(gps.init() != 0)
+        while(1) { delay_milis(100); }
 
-    latitudePid.SetSampleTimeUs(1 / NAVIGATION_LOOP_FREQ);
-    longitudePid.SetSampleTimeUs(1 / NAVIGATION_LOOP_FREQ);
+    latitudePid.SetSampleTimeUs((1 / NAVIGATION_LOOP_FREQ) * 1000);
+    longitudePid.SetSampleTimeUs((1 / NAVIGATION_LOOP_FREQ) * 1000);
 
     latitudePid.SetTunings(P_NAV, I_NAV, D_NAV);
     longitudePid.SetTunings(P_NAV, I_NAV, D_NAV);
@@ -55,9 +56,9 @@ void navigationTask(void *args) {
         }
 
         if(state.state == droneState::NAVIGATION || state.state == droneState::POS_HOLD) {
-            // TODO à modifier
-            anglesSetpoint.pitch = latitudePid.Compute(setpoint.lat * 1e6, values.lat * 1e6);
-            anglesSetpoint.roll = longitudePid.Compute(setpoint.lon * 1e6, values.lon * 1e6);
+            // TODO à modifier (ajuster au nord)
+            anglesSetpoint.pitch = latitudePid.Compute(setpoint.lat * LAT_LON_PRECISION, values.lat * LAT_LON_PRECISION);
+            anglesSetpoint.roll = longitudePid.Compute(setpoint.lon * LAT_LON_PRECISION, values.lon * LAT_LON_PRECISION);
 
             pidSetpointNode.set(anglesSetpoint);
         }
@@ -65,5 +66,6 @@ void navigationTask(void *args) {
         positionNode.set(values);
 
         values.loopPeriod = get_ms_count() - timestamp;
+        wait(values.loopPeriod, NAVIGATION_LOOP_FREQ);
     }
 }

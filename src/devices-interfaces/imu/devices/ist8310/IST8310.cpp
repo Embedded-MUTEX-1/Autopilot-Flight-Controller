@@ -83,7 +83,7 @@ int8_t IST8310::write_regs(uint8_t reg_addr,uint8_t *data, uint16_t len) {
 	char buf[100];
 	buf[0] = (char)reg_addr;
 	memcpy(buf + 1, data, len);
-	if(w->writeBytes(this->DEVICE_ADDR << 1, buf, len + 1, false) != 0) {
+	if(w->writeBytes(this->DEVICE_ADDR, buf, len + 1) != 0) {
 	    return -1;
 	}
 	return 0;
@@ -111,7 +111,7 @@ void IST8310::dataRequest()
 }
 
 int8_t IST8310::read_regs(uint8_t reg_addr,uint8_t *data, uint16_t len) {
-	w->writeBytes(DEVICE_ADDR << 1, (char *)&reg_addr, 1, true);
-	w->readBytes(DEVICE_ADDR << 1, (char *)data, len);
+	w->writeByte(DEVICE_ADDR, (char)reg_addr, false);
+	w->readBytes(DEVICE_ADDR, (char *)data, len);
 	return 0;
 }
