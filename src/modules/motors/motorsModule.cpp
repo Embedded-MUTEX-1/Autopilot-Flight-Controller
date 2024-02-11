@@ -55,7 +55,7 @@ void motorsTask(void *args) {
                 setpoint.mot[i] = MIN_THROTTLE_VALUE;
         }
 
-        motors.setMotors(setpoint);
+        //motors.setMotors(setpoint);
 
         for (int i = 0; i < NUMBER_OF_MOTORS; i++)
             values.mot[i] = setpoint.mot[i];

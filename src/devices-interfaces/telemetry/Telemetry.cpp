@@ -27,7 +27,7 @@ int8_t Telemetry::sendConfigValues(
     struct pidAltitudeConfig &altitudeConf,
     struct pidNavigationConfig &navConf
 ) {
-    StaticJsonDocument<1200> documentTx;
+    StaticJsonDocument<1500> documentTx;
 
     documentTx["isInitConfig"].set(1);
 
@@ -55,7 +55,7 @@ int8_t Telemetry::sendConfigValues(
     documentTx["inav"].set(navConf.inav);
     documentTx["dnav"].set(navConf.dnav);
 
-    char output[800];
+    char output[1500];
     serializeJson(documentTx, output);
 
     wifiManager->sendBytes(output, strlen(output));
@@ -74,7 +74,7 @@ int8_t Telemetry::sendTelemetryValues(
     struct commanderState &commander, 
     uint64_t timestamp
 ) {
-    StaticJsonDocument<1200> documentTx;
+    StaticJsonDocument<1500> documentTx;
 
     documentTx["isInitConfig"].set(0);
     documentTx["roll"].set(attitude.roll);
@@ -107,7 +107,7 @@ int8_t Telemetry::sendTelemetryValues(
         documentTx["ch"][i] = receiver.chan[i];
     }
 
-    char output[1000];
+    char output[1500];
     serializeJson(documentTx, output);
 
     wifiManager->sendBytes(output, strlen(output));

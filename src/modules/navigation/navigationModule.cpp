@@ -42,8 +42,14 @@ void navigationTask(void *args) {
 
         commanderStateNode.get(state);
         pidNavConfigNode.get(config);
-        navigationSetpointNode.get(setpoint);
         gps.updateAndGetData(values);
+
+        if(state.state == droneState::LEVEL) {
+            setpoint.lat = values.lat;
+            setpoint.lon = values.lon;
+        } else if(state.state == droneState::NAVIGATION) {
+            navigationSetpointNode.get(setpoint);
+        }
 
         if(config.newConfig) {
             latitudePid.SetTunings(config.pnav, config.inav, config.dnav);

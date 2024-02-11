@@ -46,9 +46,14 @@ void controllerTask(void *args) {
                 yawRateSetpoint = (0 - attitudeValues.yaw) * 5.0f;
             } else {
                 offsetYaw = attitudeValues.yaw;
+                yawRateSetpoint = anglesSetpoint.yawRate;
             }
         } else if(state.state == NAVIGATION || state.state == POS_HOLD) {
             yawRateSetpoint = (0 - attitudeValues.yaw) * 5.0f;
+        } else if(state.state == DISARMED) {
+            rateRollPid.Reset();
+            ratePitchPid.Reset();
+            rateYawPid.Reset();
         }
 
         values.out_roll  = rateRollPid.Compute(rollRateSetpoint, attitudeValues.gyroRateRoll);

@@ -39,9 +39,9 @@ void telemtryTask(void *args) {
         P_ALT, I_ALT, D_ALT,
         false
     };
-    struct commanderState stateConf;
+    struct commanderState stateConf { LEVEL };
     
-    uint64_t timestamp(0), loopPeriod(0);
+    uint64_t timestamp(0), loopPeriod(0), count(0);
     bool isFirstDataReceived = false;
 
     if(telemtry.init() != 0)
@@ -56,6 +56,8 @@ void telemtryTask(void *args) {
         pidNavConfValues
     );
 
+    commanderStateConfNode.set(stateConf);
+
     while(1) {
         timestamp = get_ms_count();
 
@@ -65,6 +67,7 @@ void telemtryTask(void *args) {
         altitudeNode.get(altitudeValues);
         motorsNode.get(motorsValues);
         commanderStateNode.get(state);
+        pidOutputNode.get(pidOutputValues);
 
         telemtry.sendTelemetryValues(
             attitudeValues, 
@@ -74,7 +77,7 @@ void telemtryTask(void *args) {
             receiverValues, 
             motorsValues, 
             state, 
-            timestamp);
+            count);
 
         if(telemtry.isConfigDataAvailable()) {
             if(telemtry.getConfigData(
@@ -101,6 +104,7 @@ void telemtryTask(void *args) {
         }
 
         loopPeriod = get_ms_count() - timestamp;
+        count++;
         wait(loopPeriod, TELEMETRY_LOOP_FREQ);
     }
 }
