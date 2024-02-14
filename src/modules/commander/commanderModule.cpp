@@ -18,7 +18,9 @@ void commanderTask(void *args) {
         commanderStateConfNode.get(stateFromTelemetry);
         receiverNode.get(receiverValues);
 
-        if(receiverValues.chan[THROTTLE_CHAN] < MIN_THROTTLE_THRESOLD || receiverValues.chan[DISARMED_CHAN] >= MAX_CHANNEL_VALUE || stateFromTelemetry.state == DISARMED) {
+        if(stateFromTelemetry.state == MANU) {
+            state.state = MANU;
+        } else if(receiverValues.chan[THROTTLE_CHAN] < MIN_THROTTLE_THRESOLD || receiverValues.chan[DISARMED_CHAN] >= MAX_CHANNEL_VALUE || stateFromTelemetry.state == DISARMED) {
             state.state = DISARMED;
         } else if(
             receiverValues.chan[ROLL_CHAN] > MAX_CHANNEL_THRESOLD || receiverValues.chan[ROLL_CHAN] < MIN_CHANNEL_THRESOLD

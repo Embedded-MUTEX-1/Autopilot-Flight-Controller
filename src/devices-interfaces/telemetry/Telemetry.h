@@ -37,6 +37,8 @@ public:
 
     bool isConfigDataAvailable();
 
+    void resetRecvBuffer();
+
     int8_t getConfigData(
             struct attitudeConfig *attitude,
             struct pidConfig *pid,

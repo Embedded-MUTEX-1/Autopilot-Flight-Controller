@@ -9,6 +9,7 @@
 #include "config.h"
 #include "utils/utils.h"
 #include "resources/nodes.h"
+#include <esp_log.h>
 
 void attitudeTask(void *args) {
     I2cDevice i2c;
@@ -18,11 +19,16 @@ void attitudeTask(void *args) {
     struct attitudeConfig config;
     uint64_t timestamp = 0;
 
+    config.offsetRoll = OFFSET_ROLL;
+    config.offsetPitch = OFFSET_PITCH;
+    config.offsetYaw = OFFSET_YAW;
+
     i2c.init();
     if(imu.init() != 0)
         while(1) { delay_milis(100); }
         
     ahrs.begin(ATTITUDE_LOOP_FREQ);
+    ahrs.setConfig(PARAM_1, PARAM_2);
 
     while(1) {
         timestamp = get_ms_count();
@@ -30,26 +36,25 @@ void attitudeTask(void *args) {
         attitudeConfigNode.get(config);
         imu.updateAndGetData(values);
 
-        ahrs.update(
+        ahrs.updateIMU(
                 values.gyroRateRoll,
                 values.gyroRatePitch,
                 values.gyroRateYaw,
                 values.accRateRoll,
                 values.accRatePitch,
-                values.accRateYaw,
-                values.magX,
-                values.magY,
-                values.magZ
+                values.accRateYaw
         );
 
         values.heading  = computeHeading(values.magX, values.magY, values.magZ, ahrs.getRoll(), ahrs.getPitch(), ahrs.getYaw());
         values.roll     = ahrs.getRoll()  - config.offsetRoll;
         values.pitch    = ahrs.getPitch() - config.offsetPitch;
-        values.yaw      = ahrs.getYaw()   - config.offsetYaw;
+        values.yaw      = ahrs.getYaw()   - config.offsetYaw - 180;
 
         if(config.newConfig) {
             ahrs.setConfig(config.param1, config.param2);
             config.newConfig = false;
+            //ESP_LOGE("DEBUG", "Config attitude");
+            attitudeConfigNode.set(config);
         }
 
         attitudeNode.set(values);

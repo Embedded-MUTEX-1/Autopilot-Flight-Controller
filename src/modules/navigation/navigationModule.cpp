@@ -58,7 +58,10 @@ void navigationTask(void *args) {
             latitudePid.Reset();
             longitudePid.Reset();
 
+            //ESP_LOGE("DEBUG", "Config navigation");
+
             config.newConfig = false;
+            pidNavConfigNode.set(config);
         }
 
         if(state.state == droneState::NAVIGATION || state.state == droneState::POS_HOLD) {

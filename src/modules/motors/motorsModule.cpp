@@ -32,7 +32,7 @@ void motorsTask(void *args) {
         commanderStateNode.get(state);
         receiverNode.get(receiverValues);
 
-        values.vBat = vBatPin.getValue(VBAT_PIN) * (3.1f / 4095);
+        values.vBat = vBatPin.getValue(VBAT_PIN) * (3.3f / 4095.0f) * 13.631f;
 
 #if NUMBER_OF_MOTORS == 4
         setpoint.mot[0] = receiverValues.chan[THROTTLE_CHAN] + pidValues.out_roll - pidValues.out_pitch - pidValues.out_yaw + pidValues.out_alt;
@@ -55,7 +55,13 @@ void motorsTask(void *args) {
                 setpoint.mot[i] = MIN_THROTTLE_VALUE;
         }
 
-        //motors.setMotors(setpoint);
+        for (size_t i = 0; i < NUMBER_OF_MOTORS; i++)
+        {
+            setpoint.mot[i] = constrain_(setpoint.mot[i], MIN_CHANNEL_VALUE, MAX_CHANNEL_VALUE);
+        }
+        
+
+        motors.setMotors(setpoint);
 
         for (int i = 0; i < NUMBER_OF_MOTORS; i++)
             values.mot[i] = setpoint.mot[i];

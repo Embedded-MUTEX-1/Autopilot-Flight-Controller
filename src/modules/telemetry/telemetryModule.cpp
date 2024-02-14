@@ -44,10 +44,15 @@ void telemtryTask(void *args) {
     uint64_t timestamp(0), loopPeriod(0), count(0);
     bool isFirstDataReceived = false;
 
+    commanderStateConfNode.set(stateConf);
+
     if(telemtry.init() != 0)
         while(1) { delay_milis(100); }
 
     while (!telemtry.isConfigDataAvailable());
+    telemtry.resetRecvBuffer();
+
+    //ESP_LOGE("DEBUG", "First data received");
     
     telemtry.sendConfigValues(
         attitudeConfValues,
@@ -55,8 +60,6 @@ void telemtryTask(void *args) {
         pidAltConfValues,
         pidNavConfValues
     );
-
-    commanderStateConfNode.set(stateConf);
 
     while(1) {
         timestamp = get_ms_count();
@@ -77,7 +80,7 @@ void telemtryTask(void *args) {
             receiverValues, 
             motorsValues, 
             state, 
-            count);
+            count / TELEMETRY_LOOP_FREQ);
 
         if(telemtry.isConfigDataAvailable()) {
             if(telemtry.getConfigData(
@@ -90,7 +93,7 @@ void telemtryTask(void *args) {
                 &stateConf
             ) == 0) 
             {
-                if(state.state == droneState::DISARMED && state.state == droneState::MANU) {
+                if(state.state == droneState::DISARMED || state.state == droneState::MANU) {
                     attitudeConfigNode.set(attitudeConfValues);
                     pidConfigNode.set(pidConfValues);
                     pidAltConfigNode.set(pidAltConfValues);
@@ -100,11 +103,22 @@ void telemtryTask(void *args) {
                 } else if(state.state == droneState::NAVIGATION) {
                     navigationSetpointNode.set(navSetpointValues);
                 }
+            } else {
+                telemtry.sendConfigValues(
+                    attitudeConfValues,
+                    pidConfValues,
+                    pidAltConfValues,
+                    pidNavConfValues
+                );
             }
         }
 
         loopPeriod = get_ms_count() - timestamp;
-        count++;
+
+        if(state.state != DISARMED) {
+            count++;
+        }
+
         wait(loopPeriod, TELEMETRY_LOOP_FREQ);
     }
 }

@@ -55,6 +55,9 @@ int8_t Telemetry::sendConfigValues(
     documentTx["inav"].set(navConf.inav);
     documentTx["dnav"].set(navConf.dnav);
 
+    documentTx["param1"].set(attitudeConf.param1);
+    documentTx["param2"].set(attitudeConf.param2);
+
     char output[1500];
     serializeJson(documentTx, output);
 
@@ -76,7 +79,6 @@ int8_t Telemetry::sendTelemetryValues(
 ) {
     StaticJsonDocument<1500> documentTx;
 
-    documentTx["isInitConfig"].set(0);
     documentTx["roll"].set(attitude.roll);
     documentTx["pitch"].set(attitude.pitch);
     documentTx["yaw"].set(attitude.yaw);
@@ -122,6 +124,11 @@ bool Telemetry::isConfigDataAvailable() {
     return false;
 }
 
+void Telemetry::resetRecvBuffer() {
+    char recvBuffer[1000];
+    wifiManager->readAllBytes(recvBuffer);
+}
+
 int8_t Telemetry::getConfigData(
     struct attitudeConfig *attitude,
     struct pidConfig *pid,
@@ -136,12 +143,19 @@ int8_t Telemetry::getConfigData(
 
     wifiManager->readAllBytes(recvBuffer);
 
+    //ESP_LOGE("DEBUG", "Config received : %s", recvBuffer);
+
     DeserializationError err = deserializeJson(documentRx, recvBuffer);
 
     if(err != DeserializationError::Ok)
         return -1;
 
-    commander->state = (enum droneState)documentRx["state"].as<int>();
+    attitude->newConfig = true;
+    pid->newConfig = true;
+    altitude->newConfig = true;
+    navConf->newConfig = true;
+
+    commander->state = (enum droneState)documentRx["status"].as<int>();
 
     attitude->offsetRoll = documentRx["roll"].as<float>();
     attitude->offsetPitch = documentRx["pitch"].as<float>();
@@ -163,9 +177,9 @@ int8_t Telemetry::getConfigData(
     altitude->iAltitude = documentRx["iAlt"].as<float>();
     altitude->dAltitude = documentRx["dAlt"].as<float>();
 
-    navConf->pnav = documentRx["pAlt"].as<float>();
-    navConf->inav = documentRx["iAlt"].as<float>();
-    navConf->dnav = documentRx["dAlt"].as<float>();
+    navConf->pnav = documentRx["pnav"].as<float>();
+    navConf->inav = documentRx["inav"].as<float>();
+    navConf->dnav = documentRx["dnav"].as<float>();
 
     navSetpoint->lat = documentRx["lat"].as<float>();
     navSetpoint->lon = documentRx["lon"].as<float>();

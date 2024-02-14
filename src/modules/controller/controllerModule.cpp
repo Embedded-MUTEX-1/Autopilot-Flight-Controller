@@ -2,9 +2,11 @@
 #include "../../resources/nodes.h"
 #include "../../utils/utils.h"
 #include "../../../lib/QuickPID/src/QuickPID.h"
+#include <esp_log.h>
 
 void controllerTask(void *args) {
     struct pidOutput values;
+    struct pidConfig pidConfValues;
     struct commanderState state;
     struct attitudeData attitudeValues;
     struct altitudeData altitudeValues;
@@ -19,19 +21,24 @@ void controllerTask(void *args) {
     float offsetYaw = 0;
     float yawRateSetpoint, rollRateSetpoint, pitchRateSetpoint;
 
+    rateRollPid.SetTunings(P_ROLL_PITCH, I_ROLL_PITCH, D_ROLL_PITCH);
+    ratePitchPid.SetTunings(P_ROLL_PITCH, I_ROLL_PITCH, D_ROLL_PITCH);
+    rateYawPid.SetTunings(P_YAW, I_YAW, D_YAW);
+
     rateRollPid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
     ratePitchPid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
     rateYawPid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
 
-    rateRollPid.SetOutputLimits(-MAX_ANGLE_RATE, MAX_ANGLE_RATE);
-    ratePitchPid.SetOutputLimits(-MAX_ANGLE_RATE, MAX_ANGLE_RATE);
-    rateYawPid.SetOutputLimits(-MAX_ANGLE_RATE, MAX_ANGLE_RATE);
+    rateRollPid.SetOutputLimits(-400, 400);
+    ratePitchPid.SetOutputLimits(-400, 400);
+    rateYawPid.SetOutputLimits(-400, 400);
 
     while (1)
     {
         timestamp = get_ms_count();
 
         pidSetpointNode.get(anglesSetpoint);
+        pidConfigNode.get(pidConfValues);
         commanderStateNode.get(state);
         attitudeNode.get(attitudeValues);
         altitudeNode.get(altitudeValues);
@@ -54,6 +61,16 @@ void controllerTask(void *args) {
             rateRollPid.Reset();
             ratePitchPid.Reset();
             rateYawPid.Reset();
+            offsetYaw = attitudeValues.yaw;
+        }
+
+        if(pidConfValues.newConfig) {
+            rateRollPid.SetTunings(pidConfValues.proll, pidConfValues.iroll, pidConfValues.droll);
+            ratePitchPid.SetTunings(pidConfValues.ppitch, pidConfValues.ipitch, pidConfValues.dpitch);
+            rateYawPid.SetTunings(pidConfValues.pyaw, pidConfValues.iyaw, pidConfValues.dyaw);
+            //ESP_LOGE("DEBUG", "Config controller");
+            pidConfValues.newConfig = false;
+            pidConfigNode.set(pidConfValues);
         }
 
         values.out_roll  = rateRollPid.Compute(rollRateSetpoint, attitudeValues.gyroRateRoll);

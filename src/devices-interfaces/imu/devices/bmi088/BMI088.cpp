@@ -1228,7 +1228,7 @@ int8_t Bmi088Gyro::updateAndGetData(attitudeData &values)
 
     values.gyroRateRoll = getGyroX_deg(); // deg/s
     values.gyroRatePitch = getGyroY_deg(); // deg/s
-    values.gyroRateYaw = getGyroZ_deg(); // deg/s
+    values.gyroRateYaw = -getGyroZ_deg(); // deg/s
     return 0;
 }
 

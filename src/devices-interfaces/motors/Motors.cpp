@@ -11,6 +11,7 @@ int8_t Motors::init() {
         pwmDevices[index].initPin(index, pins[index], PWM_FREQ);
         setPulse(index, MIN_THROTTLE_VALUE);
     }
+    return 0;
 }
 
 void Motors::setMotors(struct motorsSetpoint setpoint) {

@@ -46,3 +46,12 @@ float constrain_(float value, float min, float max) {
     else
         return value;
 }
+
+uint16_t constrain_(uint16_t value, uint16_t min, uint16_t max) {
+    if(value < min)
+        return min;
+    else if(value > max)
+        return max;
+    else
+        return value;
+}

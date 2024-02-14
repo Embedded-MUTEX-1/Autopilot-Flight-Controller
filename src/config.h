@@ -26,7 +26,7 @@
 #define OFFSET_YAW   0
 
 #define PARAM_1 0.3
-#define PARAM_2 0.05
+#define PARAM_2 0.01
 
 #define NUMBER_OF_MOTORS 4 // 4 or 6
 #define ESC1_PIN 40
@@ -77,7 +77,7 @@
 #define NAVIGATION_LOOP_FREQ  10 // Hz
 #define COMMANDER_LOOP_FREQ   50 // Hz
 #define RECEIVER_LOOP_FREQ   100 // Hz
-#define TELEMETRY_LOOP_FREQ   25 // Hz
+#define TELEMETRY_LOOP_FREQ   10 // Hz
 
 #define MAGNETIC_DECLINATION  1 // deg
 
@@ -105,7 +105,7 @@
 #define MAX_CHANNEL_VALUE     2000
 #define MIN_CHANNEL_VALUE     1000
 #define MIN_THROTTLE_VALUE    950
-#define MIN_THROTTLE_THRESOLD 1050
+#define MIN_THROTTLE_THRESOLD 1100
 #define MAX_CHANNEL_THRESOLD  1550
 #define MIN_CHANNEL_THRESOLD  1450
 
