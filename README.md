@@ -24,6 +24,14 @@ Components:
 - 4 or 6 ESC 30A 3s/2s + BEC 5V
 - 3.3V Regulator
 - 3s 8000 mAh Lipo battery XT60
+## Schematic:
+Coming soon.
+
+## Monitoring and telemetry:
+[Android App](https://github.com/Embedded-MUTEX-1/DroneMonitoringApp)
+
+## First flight:
+Coming soon.
 
 ## Software architecture :
 ![Architecture](https://github.com/lenny1411/Autopilot-Flight-Controller/assets/105748537/7f271d01-1ac2-45c5-8e4c-3a17ef811279)
