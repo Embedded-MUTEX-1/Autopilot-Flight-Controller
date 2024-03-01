@@ -9,9 +9,11 @@ Imu::~Imu() {
 }
 
 int8_t Imu::init() {
-    if(accel->init() != 0)
+    if(i2c.init())
+        return  -1;
+    if(accel.init() != 0)
         return -1;
-    if(gyro->init() != 0)
+    if(gyro.init() != 0)
         return -1;
     // if(mag->init() != 0)
     //     return -1;
@@ -29,8 +31,8 @@ int8_t Imu::deinit() {
 }
 
 int8_t Imu::updateAndGetData(struct attitudeData &values) {
-    gyro->updateAndGetData(values);
-    accel->updateAndGetData(values);
+    gyro.updateAndGetData(values);
+    accel.updateAndGetData(values);
 
     values.gyroRateRoll -= gyroRateOffsetRoll; // deg/s
     values.gyroRatePitch -= gyroRateOffsetPitch; // deg/s
@@ -51,11 +53,7 @@ int8_t Imu::updateAndGetData(struct attitudeData &values) {
     return 0;
 }
 
-Imu::Imu(I2cDevice *i2c) {
-    accel = new Bmi088Accel(*i2c, 0x19);
-    gyro = new Bmi088Gyro(*i2c, 0x69);
-    mag = new IST8310(i2c);
-
+Imu::Imu() {
     magMaxAxisX = 135; magMinAxisX = -151;
     magMaxAxisY = 150; magMinAxisY = -159;
     magMaxAxisZ = 131; magMinAxisZ = -166;
@@ -72,7 +70,7 @@ void Imu::imuCalibration(uint16_t calibNum) {
     struct attitudeData values;
     for (size_t i = 0; i < calibNum; i++)
     {
-        gyro->updateAndGetData(values);
+        gyro.updateAndGetData(values);
 
         gyroRateOffsetRoll += values.gyroRateRoll;
         gyroRateOffsetPitch += values.gyroRatePitch;
@@ -89,7 +87,7 @@ void Imu::magCalibration(uint16_t time) {
     struct attitudeData values;
 
 #if ENABLE_MAG_CALIBRATION == 1
-	while(mag->updateAndGetData(values) != 0);        					   //Read the raw compass values.
+	while(mag.updateAndGetData(values) != 0);        					   //Read the raw compass values.
 
 	magMinAxisX = values.magX;
 	magMaxAxisX = values.magX;
@@ -101,7 +99,7 @@ void Imu::magCalibration(uint16_t time) {
 	magMaxAxisZ = values.magZ;
 
 	for(int i = 0;i < time;i++) {                                                 //Stay in this loop until the pilot lowers the pitch stick of the transmitter.                                                 //Send telemetry data to the ground station.
-	    while(mag->updateAndGetData(values) != 0);          					  //Read the raw compass values.
+	    while(mag.updateAndGetData(values) != 0);          					  //Read the raw compass values.
 
 	    values.magX *= -1;
 	    values.magY *= -1;

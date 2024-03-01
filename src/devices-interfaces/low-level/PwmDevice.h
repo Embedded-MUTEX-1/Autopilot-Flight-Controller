@@ -7,7 +7,6 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <Arduino.h>
 
 class PwmDevice {
 public:

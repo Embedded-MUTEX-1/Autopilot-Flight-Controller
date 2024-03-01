@@ -1,92 +1,95 @@
-#include <Arduino.h>
+#include "app_tasks.h"
 #include "utils/utils.h"
 #include "resources/nodes.h"
-#include "modules/altitude/altitudeModule.h"
-#include "modules/attitude/attitudeModule.h"
-#include "modules/motors/motorsModule.h"
-#include "modules/navigation/navigationModule.h"
-#include "modules/receiver/receiverModule.h"
-#include "modules/telemetry/telemetryModule.h"
-#include "modules/commander/commanderModule.h"
-#include "modules/controller/controllerModule.h"
+#include "devices-interfaces/low-level/IoDevice.h"
+#include <Arduino.h>
 
-#define LED_BUILTIN 2
+IoDevice iOpins;
+struct commanderState state;
 
 void setup() {
-    pinMode(LED_PIN, OUTPUT);
+    iOpins.init();
+    iOpins.setPinMode(LED_PIN, false);
 
     xTaskCreatePinnedToCore(
         receiverTask,   /* Function to implement the task */
         "receiver",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         2,              /* Priority of the task */
-        NULL,
+        nullptr,
         0);
 
     xTaskCreatePinnedToCore(
         attitudeTask,   /* Function to implement the task */
         "attitude",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         2,              /* Priority of the task */
-        NULL,
+        nullptr,
+        0);
+
+    xTaskCreatePinnedToCore(
+        altitudeTask,   /* Function to implement the task */
+        "altitude",         /* Name of the task */
+        10000,          /* Stack size in words */
+        nullptr,           /* Task input parameter */
+        2,              /* Priority of the task */
+        nullptr,
         0);
 
     xTaskCreatePinnedToCore(
         navigationTask,   /* Function to implement the task */
         "navigation",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         1,              /* Priority of the task */
-        NULL,
+        nullptr,
         0);
 
     xTaskCreatePinnedToCore(
         commanderTask,   /* Function to implement the task */
         "commander",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         2,              /* Priority of the task */
-        NULL,
+        nullptr,
         1);
     
     xTaskCreatePinnedToCore(
         controllerTask,   /* Function to implement the task */
         "controller",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         2,              /* Priority of the task */
-        NULL,
+        nullptr,
         1);
 
     xTaskCreatePinnedToCore(
         motorsTask,   /* Function to implement the task */
         "motors",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         2,              /* Priority of the task */
-        NULL,
+        nullptr,
         1);
 
     xTaskCreatePinnedToCore(
-        telemtryTask,   /* Function to implement the task */
+        telemetryTask,   /* Function to implement the task */
         "telemetry",         /* Name of the task */
         10000,          /* Stack size in words */
-        NULL,           /* Task input parameter */
+        nullptr,           /* Task input parameter */
         1,              /* Priority of the task */
-        NULL,
+        nullptr,
         1);
 }
 
 void loop() {
-    struct commanderState state;
     commanderStateNode.get(state);
-
     if(state.state != DISARMED) {
-        digitalWrite(LED_PIN, HIGH);
-        delay_milis(100); 
-        digitalWrite(LED_PIN, LOW);
+        iOpins.setPin(LED_PIN, true);
+        delay_milis(100);
+        iOpins.setPin(LED_PIN, false);
         delay_milis(100); 
     }
 }

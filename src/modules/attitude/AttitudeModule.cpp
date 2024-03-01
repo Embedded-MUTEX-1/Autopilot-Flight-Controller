@@ -2,69 +2,60 @@
 // Created by lenny on 14/01/24.
 //
 
-#include "attitudeModule.h"
-#include "devices-interfaces/low-level/I2cDevice.h"
-#include "devices-interfaces/imu/Imu.h"
-#include "modules/attitude/attitude-estimators/mahony/MahonyAHRS.h"
-#include "config.h"
-#include "utils/utils.h"
-#include "resources/nodes.h"
-#include <esp_log.h>
+#include "AttitudeModule.h"
 
-void attitudeTask(void *args) {
-    I2cDevice i2c;
-    Imu imu(&i2c);
-    Mahony ahrs;
-    struct attitudeData values;
-    struct attitudeConfig config;
-    uint64_t timestamp = 0;
+AttitudeModule::AttitudeModule() {
+    attitudeConfigNode.addCallback([this](struct attitudeConfig newConfig) -> void {
+        ahrs.setConfig(newConfig.param1, newConfig.param2);
+    });
+}
 
+int8_t AttitudeModule::init() {
     config.offsetRoll = OFFSET_ROLL;
     config.offsetPitch = OFFSET_PITCH;
     config.offsetYaw = OFFSET_YAW;
 
-    i2c.init();
     if(imu.init() != 0)
-        while(1) { delay_milis(100); }
-        
+        return -1;
+
     ahrs.begin(ATTITUDE_LOOP_FREQ);
     ahrs.setConfig(PARAM_1, PARAM_2);
-
-    while(1) {
-        timestamp = get_ms_count();
-
-        attitudeConfigNode.get(config);
-        imu.updateAndGetData(values);
-
-        ahrs.updateIMU(
-                values.gyroRateRoll,
-                values.gyroRatePitch,
-                values.gyroRateYaw,
-                values.accRateRoll,
-                values.accRatePitch,
-                values.accRateYaw
-        );
-
-        values.heading  = computeHeading(values.magX, values.magY, values.magZ, ahrs.getRoll(), ahrs.getPitch(), ahrs.getYaw());
-        values.roll     = ahrs.getRoll()  - config.offsetRoll;
-        values.pitch    = ahrs.getPitch() - config.offsetPitch;
-        values.yaw      = ahrs.getYaw()   - config.offsetYaw - 180;
-
-        if(config.newConfig) {
-            ahrs.setConfig(config.param1, config.param2);
-            config.newConfig = false;
-            //ESP_LOGE("DEBUG", "Config attitude");
-            attitudeConfigNode.set(config);
-        }
-
-        attitudeNode.set(values);
-
-        values.loopPeriod = get_ms_count() - timestamp;
-        wait(values.loopPeriod, ATTITUDE_LOOP_FREQ);
-    }
+    return 0;
 }
 
-float computeHeading(int16_t magAxisX, int16_t magAxisY, int16_t magAxisZ, float roll, float pitch, float yaw) {
+void AttitudeModule::run() {
+    timestamp = get_ms_count();
+
+    getFromNodesAndDataSensors();
+    computeData();
+    attitudeNode.set(values);
+
+    values.loopPeriod = get_ms_count() - timestamp;
+    wait(values.loopPeriod, ATTITUDE_LOOP_FREQ);
+}
+
+void AttitudeModule::getFromNodesAndDataSensors() {
+    attitudeConfigNode.get(config);
+    imu.updateAndGetData(values);
+}
+
+void AttitudeModule::computeData() {
+    ahrs.updateIMU(
+            values.gyroRateRoll,
+            values.gyroRatePitch,
+            values.gyroRateYaw,
+            values.accRateRoll,
+            values.accRatePitch,
+            values.accRateYaw
+    );
+
+    values.heading  = computeHeading(values.magX, values.magY, values.magZ, ahrs.getRoll(), ahrs.getPitch(), ahrs.getYaw());
+    values.roll     = ahrs.getRoll()  - config.offsetRoll;
+    values.pitch    = ahrs.getPitch() - config.offsetPitch;
+    values.yaw      = ahrs.getYaw()   - config.offsetYaw - 180;
+}
+
+float AttitudeModule::computeHeading(int16_t magAxisX, int16_t magAxisY, int16_t magAxisZ, float roll, float pitch, float yaw) {
     float compass_x_horizontal, compass_y_horizontal, actual_compass_heading;
     //The compass values change when the roll and pitch angle of the quadcopter changes. That's the reason that the x and y values need to calculated for a virtual horizontal position.
     //The 0.0174533 value is phi/180 as the functions are in radians in stead of degrees.

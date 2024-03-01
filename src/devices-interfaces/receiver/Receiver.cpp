@@ -4,9 +4,8 @@
 
 #include "Receiver.h"
 
-Receiver::Receiver(UartDevice& serial) {
-    ibus = new IBusBM(serial);
-    
+Receiver::Receiver() {
+    ibus = IBusBM(uart);
 }
 
 Receiver::~Receiver() {
@@ -14,17 +13,18 @@ Receiver::~Receiver() {
 }
 
 int8_t Receiver::init() {
-    return ibus->init();
+    uart.init(RECEIVER_UART_PORT, RECEIVER_UART_TX, RECEIVER_UART_RX, RECEIVER_UART_BAUD);
+    return ibus.init();
 }
 
 int8_t Receiver::deinit() {
-    return ibus->deinit();
+    return ibus.deinit();
 }
 
 int8_t Receiver::updateAndGetData(struct receiverData &values) {
-    ibus->update();
+    ibus.update();
     for (int i = 0;i < NUMBER_OF_CHANNELS;i++) {
-        values.chan[i] = ibus->readChannel(i);
+        values.chan[i] = ibus.readChannel(i);
     }
     return 0;
 }

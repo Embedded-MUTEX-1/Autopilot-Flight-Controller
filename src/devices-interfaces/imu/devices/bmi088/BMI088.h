@@ -21,20 +21,17 @@
 */
 
 
-#ifndef BMI088_h
-#define BMI088_h
+#ifndef AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_BMI088_H
+#define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_BMI088_H
 
-#include "../../../low-level/I2cDevice.h"
-#include <cstdint>
-#include <cmath>
-#include "../../../../utils/utils.h"
 #include "../../../Device.h"
 #include "../../../../structs.h"
+#include "../../../low-level/I2cDevice.h"
 
 #define M_PI 3.14159265358979323846
 
-class Bmi088Accel : public Device<struct attitudeData>{
-  public:
+class Bmi088Accel : public Device<struct attitudeData> {
+public:
     enum Range {
       RANGE_3G = 0x00,
       RANGE_6G = 0x01,
@@ -67,7 +64,7 @@ class Bmi088Accel : public Device<struct attitudeData>{
       ODR_12_5HZ_BW_2HZ,
       ODR_12_5HZ_BW_1HZ
     };
-    enum PinMode {
+    enum _PinMode {
       PUSH_PULL,
       OPEN_DRAIN
     };
@@ -82,8 +79,8 @@ class Bmi088Accel : public Device<struct attitudeData>{
     int8_t updateAndGetData(struct attitudeData &values) override;
     bool setOdr(Odr odr);
     bool setRange(Range range);
-    bool pinModeInt1(PinMode mode, PinLevel level);
-    bool pinModeInt2(PinMode mode, PinLevel level);
+    bool pinModeInt1(_PinMode mode, PinLevel level);
+    bool pinModeInt2(_PinMode mode, PinLevel level);
     bool mapDrdyInt1(bool enable);
     bool mapDrdyInt2(bool enable);
     bool getDrdyStatus();
@@ -96,7 +93,7 @@ class Bmi088Accel : public Device<struct attitudeData>{
     void estimateBias();
     // check id
     bool isCorrectId();
-  private:
+private:
     // allow class Bmi088 access to private members 
     friend class Bmi088;
     // int pin input or output selection
@@ -187,8 +184,8 @@ class Bmi088Accel : public Device<struct attitudeData>{
     uint32_t current_time_counter, prev_time_counter = 0;
     uint64_t time_counter;
     // interrupt pin setup
-    bool pinModeInt1(PinIO io, PinMode mode, PinLevel level);
-    bool pinModeInt2(PinIO io, PinMode mode, PinLevel level);
+    bool pinModeInt1(PinIO io, _PinMode mode, PinLevel level);
+    bool pinModeInt2(PinIO io, _PinMode mode, PinLevel level);
     // self test
     bool selfTest();
     // power and mode settings
@@ -224,7 +221,7 @@ class Bmi088Gyro : public Device<struct attitudeData> {
       ODR_200HZ_BW_64HZ = 0x86,
       ODR_100HZ_BW_32HZ = 0x87
     };
-    enum PinMode {
+    enum _PinMode {
       PUSH_PULL,
       OPEN_DRAIN
     };
@@ -239,8 +236,8 @@ class Bmi088Gyro : public Device<struct attitudeData> {
     int8_t updateAndGetData(struct attitudeData &values) override;
     bool setOdr(Odr odr);
     bool setRange(Range range);
-    bool pinModeInt3(PinMode mode, PinLevel level);
-    bool pinModeInt4(PinMode mode, PinLevel level);
+    bool pinModeInt3(_PinMode mode, PinLevel level);
+    bool pinModeInt4(_PinMode mode, PinLevel level);
     bool mapDrdyInt3(bool enable);
     bool mapDrdyInt4(bool enable);
     bool getDrdyStatus();

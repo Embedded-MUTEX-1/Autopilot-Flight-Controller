@@ -1,9 +1,8 @@
 #include "UartDevice.h"
 
-
 UartDevice::UartDevice()
 {
-    
+
 }
 
 UartDevice::~UartDevice()
@@ -11,9 +10,20 @@ UartDevice::~UartDevice()
     deinit();
 }
 
-int8_t UartDevice::init(uint8_t uartNum, uint16_t txPin, uint16_t rxPin, unsigned long baud)
+int8_t UartDevice::init(uint8_t uart_num, uint16_t txPin, uint16_t rxPin, unsigned long baud)
 {
-    serialPort = new HardwareSerial(uartNum);
+    switch (uart_num)
+    {
+        case 0:
+            serialPort = &Serial0;
+            break;
+        case 1:
+            serialPort = &Serial1;
+            break;
+        case 2:
+            serialPort = &Serial2;
+            break;
+    }
     serialPort->setPins(rxPin, txPin);
     serialPort->begin(baud);
     return 0;

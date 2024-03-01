@@ -13,7 +13,7 @@
 
 void delay_milis(uint32_t milis);
 void wait(uint32_t currentLoopDuration, uint16_t loopFreq);
-uint32_t get_ms_count();
+uint64_t get_ms_count();
 float map_(float x, float in_min, float in_max, float out_min, float out_max);
 long map_(long x, long in_min, long in_max, long out_min, long out_max);
 long constrain_(long value, long min, long max);

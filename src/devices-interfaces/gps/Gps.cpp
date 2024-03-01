@@ -4,9 +4,8 @@
 
 #include "Gps.h"
 
-Gps::Gps(UartDevice* uartDevice) {
-    this->uartDevice = uartDevice;
-    this->decoder = new MicroNMEA(nmeaBuffer, sizeof(nmeaBuffer));
+Gps::Gps() {
+    this->decoder = MicroNMEA(nmeaBuffer, sizeof(nmeaBuffer));
 }
 
 Gps::~Gps() {
@@ -14,6 +13,7 @@ Gps::~Gps() {
 }
 
 int8_t Gps::init() {
+    uart.init(GPS_UART_PORT, GPS_UART_TX, GPS_UART_RX, GPS_UART_BAUD);
     return 0;
 }
 
@@ -23,17 +23,17 @@ int8_t Gps::deinit() {
 
 int8_t Gps::updateAndGetData(positionData &values) {
     char c;
-    while(uartDevice->numBytesAvailable() > 0) {
-        c = uartDevice->readByte();
-        if(decoder->process(c))
+    while(uart.numBytesAvailable() > 0) {
+        c = uart.readByte();
+        if(decoder.process(c))
             break;
     }
-    if (decoder->isValid())
+    if (decoder.isValid())
     {
-        if(decoder->getNavSystem() == 'N') {
-            values.lat = decoder->getLatitude() / 1e6;
-            values.lon = decoder->getLongitude() / 1e6;
-            decoder->clear();
+        if(decoder.getNavSystem() == 'N') {
+            values.lat = decoder.getLatitude() / 1e6;
+            values.lon = decoder.getLongitude() / 1e6;
+            decoder.clear();
             return 0;
         }
     }

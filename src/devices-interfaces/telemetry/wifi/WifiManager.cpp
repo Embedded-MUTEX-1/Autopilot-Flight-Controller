@@ -17,7 +17,7 @@ int8_t WifiManager::init() {
     char ssid[20];
     char password[20];
     char recvPacket[50];
-#if DIRECT_CONNECTION == 1
+#if DIRECT_CONNECTION == 0
     do {
         startAccesPoint(WIFI_AP_SSID, WIFI_AP_PASSWD);
         waitDataFromWifiApAvailable();
@@ -76,7 +76,7 @@ void WifiManager::extractSsidAndPasswd(char *buf, char *ssid, char *password) {
 
 bool WifiManager::connectToWifiStation(const char *ssid, const char *password) {
     uint16_t count = 0; 
-#if DIRECT_CONNECTION == 1
+#if DIRECT_CONNECTION == 0
     udp.beginPacket(udp.remoteIP(), udp.remotePort());
     udp.print("SSID: ");
     udp.println(ssid);

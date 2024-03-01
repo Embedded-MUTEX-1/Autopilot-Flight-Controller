@@ -48,7 +48,7 @@ public:
             struct navigationSetpoint *navSetpoint,
             struct commanderState *commander);
 private:
-    WirelessInterface *wifiManager;
+    WifiManager wifiManager;
 };
 
 

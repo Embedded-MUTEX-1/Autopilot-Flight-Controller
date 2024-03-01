@@ -1,9 +1,8 @@
-#ifndef __UARTDEVICE_H__
-#define __UARTDEVICE_H__
+#ifndef AUTOPILOT_FLIGHT_CONTROLLER_IODEVICE_H
+#define AUTOPILOT_FLIGHT_CONTROLLER_IODEVICE_H
 
 #include <cstdint>
 #include <cstddef>
-#include <Arduino.h>
 
 class IoDevice {
 public:
@@ -14,4 +13,4 @@ public:
     bool getPin(uint16_t pinNum);
 };
 
-#endif // __UARTDEVICE_H__
+#endif // AUTOPILOT_FLIGHT_CONTROLLER_IODEVICE_H

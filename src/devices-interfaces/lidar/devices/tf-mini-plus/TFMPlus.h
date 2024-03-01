@@ -191,6 +191,7 @@
 class TFMPlus : public Device<struct altitudeData>
 {
   public:
+    TFMPlus() {}
     TFMPlus(UartDevice *streamPtr);
     ~TFMPlus();
 

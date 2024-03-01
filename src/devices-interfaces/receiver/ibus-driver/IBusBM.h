@@ -30,6 +30,7 @@
 class IBusBM : public ReceiverInterface {
 
 public:
+    IBusBM();
     IBusBM(UartDevice &serial);
     ~IBusBM();
 

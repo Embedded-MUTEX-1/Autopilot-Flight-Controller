@@ -1,4 +1,6 @@
 #include "MicroNMEA.h"
+#include <ctype.h>
+#include "string.h"
 
 // Allow debugging/regression testing under normal g++ environment.
 #ifdef MICRONMEA_DEBUG

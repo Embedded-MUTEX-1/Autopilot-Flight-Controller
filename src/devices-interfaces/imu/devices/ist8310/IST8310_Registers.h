@@ -46,4 +46,4 @@ enum class Register : uint8_t {
 	ZZ_CROSS_H = 0xAD, // cross axis zz high byte
 };
 
-#endif SRC_POSITIONING_MAG_IST8310_REGISTERS_H_
+#endif

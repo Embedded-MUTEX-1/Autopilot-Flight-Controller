@@ -13,15 +13,15 @@
 
 class Gps {
 public:
-    Gps(UartDevice* uartDevice);
+    Gps();
     ~Gps();
 
     int8_t init();
     int8_t deinit();
     int8_t updateAndGetData(struct positionData &values);
 private:
-    MicroNMEA* decoder;
-    UartDevice* uartDevice;
+    MicroNMEA decoder;
+    UartDevice uart;
     char nmeaBuffer[500];
 };
 

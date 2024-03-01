@@ -206,6 +206,11 @@ size_t IBusBM::update() {
     return 0;
 }
 
+
+IBusBM::IBusBM() {
+
+}
+
 IBusBM::IBusBM(UartDevice &serial) {
     this->stream = &serial;
 }

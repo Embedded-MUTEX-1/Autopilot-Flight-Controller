@@ -3,6 +3,7 @@
 //
 
 #include "AdcDevice.h"
+#include "Arduino.h"
 
 int8_t AdcDevice::init() {
     analogReadResolution(12);

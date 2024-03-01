@@ -6,7 +6,7 @@
 #include "../../../lib/ArduinoJson/ArduinoJson.h"
 
 Telemetry::Telemetry() {
-    wifiManager = new WifiManager();
+
 }
 
 Telemetry::~Telemetry() {
@@ -14,11 +14,11 @@ Telemetry::~Telemetry() {
 }
 
 int8_t Telemetry::init() {
-    return wifiManager->init();
+    return wifiManager.init();
 }
 
 int8_t Telemetry::deinit() {
-    return wifiManager->deinit();
+    return wifiManager.deinit();
 }
 
 int8_t Telemetry::sendConfigValues(
@@ -61,7 +61,7 @@ int8_t Telemetry::sendConfigValues(
     char output[1500];
     serializeJson(documentTx, output);
 
-    wifiManager->sendBytes(output, strlen(output));
+    wifiManager.sendBytes(output, strlen(output));
 
     documentTx.clear();
     return 0;
@@ -112,21 +112,21 @@ int8_t Telemetry::sendTelemetryValues(
     char output[1500];
     serializeJson(documentTx, output);
 
-    wifiManager->sendBytes(output, strlen(output));
+    wifiManager.sendBytes(output, strlen(output));
 
     documentTx.clear();
     return 0;
 }
 
 bool Telemetry::isConfigDataAvailable() {
-    if(wifiManager->dataAvailable() > 0)
+    if(wifiManager.dataAvailable() > 0)
         return true;
     return false;
 }
 
 void Telemetry::resetRecvBuffer() {
     char recvBuffer[1000];
-    wifiManager->readAllBytes(recvBuffer);
+    wifiManager.readAllBytes(recvBuffer);
 }
 
 int8_t Telemetry::getConfigData(
@@ -141,7 +141,7 @@ int8_t Telemetry::getConfigData(
     char recvBuffer[1000];
     StaticJsonDocument<1200> documentRx;
 
-    wifiManager->readAllBytes(recvBuffer);
+    wifiManager.readAllBytes(recvBuffer);
 
     //ESP_LOGE("DEBUG", "Config received : %s", recvBuffer);
 

@@ -17,7 +17,7 @@ void wait(uint32_t currentLoopDuration, uint16_t loopFreq) {
     }
 }
 
-uint32_t get_ms_count() {
+uint64_t get_ms_count() {
     return xTaskGetTickCount();
 }
 

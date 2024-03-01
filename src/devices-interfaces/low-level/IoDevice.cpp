@@ -3,6 +3,7 @@
 //
 
 #include "IoDevice.h"
+#include "Arduino.h"
 
 IoDevice::IoDevice() {
 

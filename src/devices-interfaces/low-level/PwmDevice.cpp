@@ -3,6 +3,7 @@
 //
 
 #include "PwmDevice.h"
+#include "Arduino.h"
 
 PwmDevice::PwmDevice() {
 

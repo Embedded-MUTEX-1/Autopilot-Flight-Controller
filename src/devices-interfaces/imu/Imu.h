@@ -14,7 +14,7 @@
 
 class Imu {
 public:
-    Imu(I2cDevice* i2c);
+    Imu();
     ~Imu();
 
     int8_t init();
@@ -23,9 +23,10 @@ public:
     void imuCalibration(uint16_t calibNum);
     void magCalibration(uint16_t time);
 private:
-    Device<attitudeData>* accel;
-    Device<attitudeData>* gyro;
-    Device<attitudeData>* mag;
+    I2cDevice i2c;
+    Bmi088Accel accel = Bmi088Accel(i2c, 0x19);
+    Bmi088Gyro gyro = Bmi088Gyro(i2c, 0x69);
+    IST8310 mag = IST8310(&i2c);;
     int16_t magMaxAxisX, magMinAxisX;
     int16_t magMaxAxisY, magMinAxisY;
     int16_t magMaxAxisZ, magMinAxisZ;

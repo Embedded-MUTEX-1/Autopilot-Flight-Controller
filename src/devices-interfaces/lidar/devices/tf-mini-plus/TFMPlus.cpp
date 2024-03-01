@@ -84,6 +84,7 @@
 
 #include "TFMPlus.h"
 #include "../../../../utils/utils.h"
+#include "string.h"
 //#include <Wire.h>          //  Future I2C Implementation
 
 // Constructor
@@ -116,7 +117,7 @@ bool TFMPlus::getData( int16_t &dist, int16_t &flux, int16_t &temp)
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Set timer to one second timeout if HEADER never appears
     // or serial data never becomes available.
-    uint32_t serialTimeout = millis() + 1000;
+    uint32_t serialTimeout = get_ms_count() + 1000;
     
     // Flush all but last frame of data from the serial buffer.
     while( (*pStream).numBytesAvailable() > TFMP_FRAME_SIZE) (*pStream).readByte();
@@ -140,7 +141,7 @@ bool TFMPlus::getData( int16_t &dist, int16_t &flux, int16_t &temp)
         }
         // If HEADER or serial data are not available
         // after more than one second...
-        if( millis() >  serialTimeout)
+        if( get_ms_count() >  serialTimeout)
         {
             status = TFMP_HEADER;   // then set error...
             return false;           // and return "false".
@@ -254,7 +255,7 @@ bool TFMPlus::sendCommand( uint32_t cmnd, uint32_t param)
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Set a one second timer to timeout if HEADER never appears
     // or serial data never becomes available
-    uint32_t serialTimeout = millis() + 1000;
+    uint32_t serialTimeout = get_ms_count() + 1000;
 	  // Clear out the entire command reply data buffer
     memset( reply, 0, sizeof( reply));
     // Read one byte from the serial buffer into the end of
@@ -273,7 +274,7 @@ bool TFMPlus::sendCommand( uint32_t cmnd, uint32_t param)
         }
         // If HEADER pattern or Serial data are not available
         // after more than one second...
-        if( millis() >  serialTimeout)
+        if( get_ms_count() >  serialTimeout)
         {
             status = TFMP_TIMEOUT;  // then set error...
             return false;           // and return "false".
@@ -324,62 +325,6 @@ bool TFMPlus::sendCommand( uint32_t cmnd, uint32_t param)
     return true;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// - - - - -    The following is for testing purposes    - - - -
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-// Called by either 'printFrame()' or 'printReply()'
-// Print status condition either 'READY' or error type
-void TFMPlus::printStatus()
-{
-    Serial.print("Status: ");
-    if( status == TFMP_READY)          Serial.print( "READY");
-    else if( status == TFMP_SERIAL)    Serial.print( "SERIAL");
-    else if( status == TFMP_HEADER)    Serial.print( "HEADER");
-    else if( status == TFMP_CHECKSUM)  Serial.print( "CHECKSUM");
-    else if( status == TFMP_TIMEOUT)   Serial.print( "TIMEOUT");
-    else if( status == TFMP_PASS)      Serial.print( "PASS");
-    else if( status == TFMP_FAIL)      Serial.print( "FAIL");
-    else if( status == TFMP_I2CREAD)   Serial.print( "I2C-READ");
-    else if( status == TFMP_I2CWRITE)  Serial.print( "I2C-WRITE");
-    else if( status == TFMP_I2CLENGTH) Serial.print( "I2C-LENGTH");
-    else if( status == TFMP_WEAK)      Serial.print( "Signal weak");
-    else if( status == TFMP_STRONG)    Serial.print( "Signal saturation");
-    else if( status == TFMP_FLOOD)     Serial.print( "Ambient light saturation");
-    else Serial.print( "OTHER");
-    Serial.println();
-}
-
-// Print error type and HEX values
-// of each byte in the data frame
-void TFMPlus::printFrame()
-{
-    printStatus();
-    // Print the Hex value of each byte of data
-    Serial.print("Data:");
-    for( uint8_t i = 0; i < TFMP_FRAME_SIZE; i++)
-    {
-      Serial.print(" ");
-      Serial.print( frame[ i] < 16 ? "0" : "");
-      Serial.print( frame[ i], HEX);
-    }
-    Serial.println();
-}
-
-// Print error type and HEX values of
-// each byte in the command response frame.
-void TFMPlus::printReply()
-{
-    printStatus();
-    // Print the Hex value of each byte
-    for( uint8_t i = 0; i < TFMP_REPLY_SIZE; i++)
-    {
-      Serial.print(" ");
-      Serial.print( reply[ i] < 16 ? "0" : "");
-      Serial.print( reply[ i], HEX);
-    }
-    Serial.println();
-}
 
 int8_t TFMPlus::init() {
     if(!begin())
@@ -399,7 +344,7 @@ int8_t TFMPlus::updateAndGetData(altitudeData &values) {
     if(!getData( tfDist, tfFlux, tfTemp)) // Get data from the device.
         return -1;
 
-    values.alt = (float)tfDist * 100.0f;
+    values.alt = (float)tfDist;
 
     return 0;
 }

@@ -10,7 +10,7 @@ public:
     UartDevice();
     ~UartDevice();
 
-    int8_t init(uint8_t uartNum, uint16_t txPin, uint16_t rxPin, unsigned long baud);
+    int8_t init(uint8_t uart_num, uint16_t txPin, uint16_t rxPin, unsigned long baud);
     int8_t deinit();
 
     void flush();

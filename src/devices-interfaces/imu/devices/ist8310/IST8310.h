@@ -16,8 +16,11 @@
 #include "../../../Device.h"
 #include "../../../../structs.h"
 
+#define DEVICE_ADDR 0x0E
+
 class IST8310 : public Device<struct attitudeData> {
 public:
+    IST8310() {}
 	IST8310(I2cDevice* w);
 	void setI2cInterface(I2cDevice* w);
 	bool isConnected();
@@ -29,7 +32,6 @@ public:
 	int8_t read(int16_t* axisX, int16_t* axisY, int16_t* axisZ);
 private:
     I2cDevice* w;
-	const uint8_t DEVICE_ADDR = 0x0E;
 	int8_t write_regs(uint8_t reg_addr,uint8_t *data, uint16_t len);
 	int8_t read_regs(uint8_t reg_addr,uint8_t *data, uint16_t len);
 	bool isDataRequested;

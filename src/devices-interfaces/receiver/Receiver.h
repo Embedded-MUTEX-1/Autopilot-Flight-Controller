@@ -13,14 +13,15 @@
 
 class Receiver {
 public:
-    Receiver(UartDevice& serial);
+    Receiver();
     ~Receiver();
 
     int8_t init();
     int8_t deinit();
     int8_t updateAndGetData(struct receiverData &values);
 private:
-    ReceiverInterface* ibus;
+    UartDevice uart;
+    IBusBM ibus;
 };
 
 

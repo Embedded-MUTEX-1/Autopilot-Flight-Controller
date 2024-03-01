@@ -21,7 +21,7 @@ void Motors::setMotors(struct motorsSetpoint setpoint) {
 }
 
 int8_t Motors::initPin(uint8_t motorIndex, uint8_t pin, float pwmFreq) {
-    pwmDevices[motorIndex].initPin(motorIndex, pin, pwmFreq);
+    return pwmDevices[motorIndex].initPin(motorIndex, pin, pwmFreq);
 }
 
 void Motors::setPulse(uint8_t motorIndex, uint16_t pulseDuration) {

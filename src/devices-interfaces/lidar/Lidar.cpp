@@ -4,8 +4,8 @@
 
 #include "Lidar.h"
 
-Lidar::Lidar(UartDevice &uartDevice) {
-    lidar = new TFMPlus(&uartDevice);
+Lidar::Lidar() {
+    lidar = TFMPlus(&uart);
 }
 
 Lidar::~Lidar() {
@@ -13,7 +13,8 @@ Lidar::~Lidar() {
 }
 
 int8_t Lidar::init() {
-    return lidar->init();
+    uart.init(LIDAR_UART_PORT, LIDAR_UART_TX, LIDAR_UART_RX, LIDAR_UART_BAUD);
+    return lidar.init();
 }
 
 int8_t Lidar::deinit() {
@@ -21,5 +22,5 @@ int8_t Lidar::deinit() {
 }
 
 int8_t Lidar::updateAndGetData(altitudeData &values) {
-    return lidar->updateAndGetData(values);
+    return lidar.updateAndGetData(values);
 }

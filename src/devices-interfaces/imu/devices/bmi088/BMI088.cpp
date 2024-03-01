@@ -23,6 +23,9 @@
 
 #include "BMI088.h"
 #include <string.h>
+#include <cstdint>
+#include <cmath>
+#include "../../../../utils/utils.h"
 
 /* Macros to get and set register fields */
 #define GET_FIELD(regname,value) ((value & regname##_MASK) >> regname##_POS)
@@ -827,13 +830,13 @@ bool Bmi088Accel::setRange(Range range)
 }
 
 /* sets the Int1 pin configuration */
-bool Bmi088Accel::pinModeInt1(PinMode mode, PinLevel level)
+bool Bmi088Accel::pinModeInt1(_PinMode mode, PinLevel level)
 {
   return pinModeInt1(PIN_OUTPUT,mode,level);
 }
 
 /* sets the Int2 pin configuration */
-bool Bmi088Accel::pinModeInt2(PinMode mode, PinLevel level)
+bool Bmi088Accel::pinModeInt2(_PinMode mode, PinLevel level)
 {
   return pinModeInt2(PIN_OUTPUT,mode,level);
 }
@@ -929,7 +932,7 @@ uint64_t Bmi088Accel::getTime_ps()
 }
 
 /* sets the Int1 pin configuration */
-bool Bmi088Accel::pinModeInt1(PinIO io, PinMode mode, PinLevel level)
+bool Bmi088Accel::pinModeInt1(PinIO io, _PinMode mode, PinLevel level)
 {
   uint8_t writeReg = 0, readReg = 0;
   uint8_t pin_io, pin_mode, active_lvl;
@@ -984,7 +987,7 @@ bool Bmi088Accel::pinModeInt1(PinIO io, PinMode mode, PinLevel level)
 }
 
 /* sets the Int2 pin configuration */
-bool Bmi088Accel::pinModeInt2(PinIO io, PinMode mode, PinLevel level)
+bool Bmi088Accel::pinModeInt2(PinIO io, _PinMode mode, PinLevel level)
 {
   uint8_t writeReg = 0, readReg = 0;
   uint8_t pin_io, pin_mode, active_lvl;
@@ -1155,7 +1158,7 @@ void Bmi088Accel::writeRegister(uint8_t subAddress, uint8_t data)
 /* writes multiple bytes to BMI088 register given a register address and data */
 void Bmi088Accel::writeRegisters(uint8_t subAddress, uint8_t count, const uint8_t* data)
 {
-    char buf[100];
+  char buf[100];
 	buf[0] = (char)subAddress;
 	memcpy(buf + 1, data, count);
 	if(_i2c->writeBytes(_address, buf, count + 1) != 0) {
@@ -1281,7 +1284,7 @@ bool Bmi088Gyro::setRange(Range range)
 }
 
 /* sets the Int3 pin configuration */
-bool Bmi088Gyro::pinModeInt3(PinMode mode, PinLevel level)
+bool Bmi088Gyro::pinModeInt3(_PinMode mode, PinLevel level)
 {
   uint8_t writeReg = 0, readReg = 0;
   uint8_t pin_mode, active_lvl;
@@ -1322,7 +1325,7 @@ bool Bmi088Gyro::pinModeInt3(PinMode mode, PinLevel level)
 }
 
 /* sets the Int4 pin configuration */
-bool Bmi088Gyro::pinModeInt4(PinMode mode, PinLevel level)
+bool Bmi088Gyro::pinModeInt4(_PinMode mode, PinLevel level)
 {
   uint8_t writeReg = 0, readReg = 0;
   uint8_t pin_mode, active_lvl;
@@ -1616,19 +1619,19 @@ bool Bmi088::pinModeDrdy(PinMode mode, PinLevel level)
 {
   switch (drdy_pin) {
     case 1: {
-      if(!accel->pinModeInt1((Bmi088Accel::PinMode)mode,(Bmi088Accel::PinLevel)level)) {
+      if(!accel->pinModeInt1((Bmi088Accel::_PinMode)mode,(Bmi088Accel::PinLevel)level)) {
         return false;
       }  
       return true;
     }
     case 2: {
-      if(!accel->pinModeInt2((Bmi088Accel::PinMode)mode,(Bmi088Accel::PinLevel)level)) {
+      if(!accel->pinModeInt2((Bmi088Accel::_PinMode)mode,(Bmi088Accel::PinLevel)level)) {
         return false;
       }  
       return true;
     }
     default: {
-      if(!accel->pinModeInt2((Bmi088Accel::PinMode)mode,(Bmi088Accel::PinLevel)level)) {
+      if(!accel->pinModeInt2((Bmi088Accel::_PinMode)mode,(Bmi088Accel::PinLevel)level)) {
         return false;
       }  
       return true;

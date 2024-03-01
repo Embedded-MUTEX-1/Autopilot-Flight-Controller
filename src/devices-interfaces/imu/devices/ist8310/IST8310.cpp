@@ -83,7 +83,7 @@ int8_t IST8310::write_regs(uint8_t reg_addr,uint8_t *data, uint16_t len) {
 	char buf[100];
 	buf[0] = (char)reg_addr;
 	memcpy(buf + 1, data, len);
-	if(w->writeBytes(this->DEVICE_ADDR, buf, len + 1) != 0) {
+	if(w->writeBytes(DEVICE_ADDR, buf, len + 1) != 0) {
 	    return -1;
 	}
 	return 0;
