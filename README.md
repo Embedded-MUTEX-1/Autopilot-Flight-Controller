@@ -31,7 +31,7 @@ Coming soon.
 [Android App](https://github.com/Embedded-MUTEX-1/DroneMonitoringApp)
 
 ## First flight:
-Coming soon.
+https://github.com/Embedded-MUTEX-1/Autopilot-Flight-Controller/assets/105748537/e9cec997-3c3b-4aa0-ba62-bae3b584f156
 
 ## Software architecture :
 ![Architecture](https://github.com/lenny1411/Autopilot-Flight-Controller/assets/105748537/7f271d01-1ac2-45c5-8e4c-3a17ef811279)
