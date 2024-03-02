@@ -60,10 +60,10 @@ void NavigationModule::processDataAndSetToNodes()
 {
     if(state.state == droneState::NAVIGATION || state.state == droneState::POS_HOLD) {
         // TODO à modifier (ajuster au nord)
-        anglesSetpoint.pitch = latitudePid.Compute(setpoint.lat * LAT_LON_PRECISION, values.lat * LAT_LON_PRECISION);
-        anglesSetpoint.roll = longitudePid.Compute(setpoint.lon * LAT_LON_PRECISION, values.lon * LAT_LON_PRECISION);
+        // anglesSetpoint.pitch = latitudePid.Compute(setpoint.lat * LAT_LON_PRECISION, values.lat * LAT_LON_PRECISION);
+        // anglesSetpoint.roll = longitudePid.Compute(setpoint.lon * LAT_LON_PRECISION, values.lon * LAT_LON_PRECISION);
 
-        pidSetpointNode.set(anglesSetpoint);
+        // pidSetpointNode.set(anglesSetpoint);
     }
     positionNode.set(values);
 }

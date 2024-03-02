@@ -52,7 +52,7 @@ void setup() {
         "commander",         /* Name of the task */
         10000,          /* Stack size in words */
         nullptr,           /* Task input parameter */
-        2,              /* Priority of the task */
+        1,              /* Priority of the task */
         nullptr,
         1);
     

@@ -22,7 +22,7 @@ public:
 private:
     MicroNMEA decoder;
     UartDevice uart;
-    char nmeaBuffer[500];
+    char nmeaBuffer[255];
 };
 
 

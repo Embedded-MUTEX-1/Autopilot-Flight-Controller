@@ -23,10 +23,11 @@ private:
     QuickPID rateRollPid;
     QuickPID ratePitchPid;
     QuickPID rateYawPid;
+    QuickPID altitudePid;
 
     uint64_t timestamp = 0;
     float offsetYaw = 0;
-    float yawRateSetpoint, rollRateSetpoint, pitchRateSetpoint;
+    float yawRateSetpoint, rollRateSetpoint, pitchRateSetpoint, altitudeSetpoint;
 
     void getDataFromNodes();
     void computeSetpointAngleRate();

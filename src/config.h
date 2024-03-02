@@ -17,7 +17,7 @@
 #define I_YAW 0
 #define D_YAW 0
 
-#define P_ALT 2.7 
+#define P_ALT 1.7 
 #define I_ALT 0
 #define D_ALT 0
 
@@ -53,7 +53,7 @@
 #define ROLL_CHAN             0
 #define PITCH_CHAN            1
 #define YAW_CHAN              3
-#define NAVIGATION_CHAN       4
+#define MODE_SELECTION_CHAN   4
 #define DISARMED_CHAN         5
 
 #define MAX_YAW_CHAN_THRESHOLD 1550
@@ -108,5 +108,6 @@
 #define MIN_THROTTLE_THRESOLD 1100
 #define MAX_CHANNEL_THRESOLD  1550
 #define MIN_CHANNEL_THRESOLD  1450
+#define POS_HOLD_CHAN_5_VALUE 1500
 
 #endif //AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_CONFIG_H
