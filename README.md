@@ -20,11 +20,13 @@ Components:
 - ESP32-S3
 - IMU 6-Dof BMI088 Gyro+Accel
 - Transmitter Flysky FS-I6X + Receiver Flysky FS-IA6B (Ibus mode)
-- Holybro M8N (GNSS module + magnetometer)
+- ZED-F9P RTK GNSS From ArduSimple
+- BMM150 (magnetometer)
+- MS5611 (barometer)
 - 4 or 6 ESC 30A 3s/2s + BEC 5V
 - 3.3V Regulator
 - 3s 8000 mAh Lipo battery XT60
-## Schematic:
+## Hardware block diagram:
 Coming soon.
 
 ## Monitoring and telemetry:
@@ -34,5 +36,4 @@ Coming soon.
 https://github.com/Embedded-MUTEX-1/Autopilot-Flight-Controller/assets/105748537/e9cec997-3c3b-4aa0-ba62-bae3b584f156
 
 ## Software architecture :
-![Architecture](https://github.com/lenny1411/Autopilot-Flight-Controller/assets/105748537/7f271d01-1ac2-45c5-8e4c-3a17ef811279)
-
+![Autopilot](https://github.com/Embedded-MUTEX-1/Autopilot-Flight-Controller/assets/105748537/b565809f-8e8a-446c-8b6c-04ee01bfed2f)
