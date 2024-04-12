@@ -3,7 +3,6 @@
 
 void receiverTask(void *args);
 void sensorsTask(void *args);
-void altitudeTask(void *args);
 void navigationTask(void *args);
 void commanderTask(void *args);
 void controllerTask(void *args);

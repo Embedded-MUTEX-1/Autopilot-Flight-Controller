@@ -29,15 +29,6 @@ void setup() {
         nullptr,
         0);
 
-    // xTaskCreatePinnedToCore(
-    //     altitudeTask,   /* Function to implement the task */
-    //     "altitude",         /* Name of the task */
-    //     10000,          /* Stack size in words */
-    //     nullptr,           /* Task input parameter */
-    //     2,              /* Priority of the task */
-    //     nullptr,
-    //     0);
-
     xTaskCreatePinnedToCore(
         navigationTask,   /* Function to implement the task */
         "navigation",         /* Name of the task */

@@ -6,7 +6,6 @@
 #include "modules/telemetry/TelemetryModule.h"
 #include "modules/commander/CommanderModule.h"
 #include "modules/controller/ControllerModule.h"
-#include "modules/altitude/AltitudeModule.h"
 
 I2cDevice i2c;
 
@@ -20,14 +19,6 @@ void receiverTask(void *args) {
 
 void sensorsTask(void *args) {
     SensorsModule module = SensorsModule(&i2c);
-    module.init();
-    while(true) {
-        module.run();
-    }
-}
-
-void altitudeTask(void *args) {
-    AltitudeModule module = AltitudeModule(&i2c);
     module.init();
     while(true) {
         module.run();
