@@ -5,6 +5,7 @@
 #ifndef AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_PROPERTYNODE_H
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_PROPERTYNODE_H
 
+#include <functional>
 #include <mutex>
 #include <vector>
 

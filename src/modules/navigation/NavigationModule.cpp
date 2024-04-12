@@ -6,12 +6,14 @@
 
 NavigationModule::NavigationModule()
 {
+    latitudePid = FastPID(P_NAV, I_NAV, D_NAV, NAVIGATION_LOOP_FREQ, 16, true);
+    longitudePid = FastPID(P_NAV, I_NAV, D_NAV, NAVIGATION_LOOP_FREQ, 16, true);
     pidNavConfigNode.addCallback([this](struct pidNavigationConfig config) -> void {
-        this->latitudePid.SetTunings(config.pnav, config.inav, config.dnav);
-        this->longitudePid.SetTunings(config.pnav, config.inav, config.dnav);
+        this->latitudePid.setCoefficients(config.pnav, config.inav, config.dnav, NAVIGATION_LOOP_FREQ);
+        this->longitudePid.setCoefficients(config.pnav, config.inav, config.dnav, NAVIGATION_LOOP_FREQ);
 
-        this->latitudePid.Reset();
-        this->longitudePid.Reset();
+        this->latitudePid.clear();
+        this->longitudePid.clear();
     });
 }
 
@@ -20,14 +22,8 @@ int8_t NavigationModule::init()
     if(gps.init() != 0)
         return -1;
 
-    latitudePid.SetSampleTimeUs((1 / NAVIGATION_LOOP_FREQ) * 1000);
-    longitudePid.SetSampleTimeUs((1 / NAVIGATION_LOOP_FREQ) * 1000);
-
-    latitudePid.SetTunings(P_NAV, I_NAV, D_NAV);
-    longitudePid.SetTunings(P_NAV, I_NAV, D_NAV);
-
-    latitudePid.SetOutputLimits(-MAX_NAV_ANGLE, MAX_NAV_ANGLE);
-    longitudePid.SetOutputLimits(-MAX_NAV_ANGLE, MAX_NAV_ANGLE);
+    latitudePid.setOutputRange(-MAX_NAV_ANGLE, MAX_NAV_ANGLE);
+    longitudePid.setOutputRange(-MAX_NAV_ANGLE, MAX_NAV_ANGLE);
 
     return 0;
 }
@@ -60,10 +56,10 @@ void NavigationModule::processDataAndSetToNodes()
 {
     if(state.state == droneState::NAVIGATION || state.state == droneState::POS_HOLD) {
         // TODO à modifier (ajuster au nord)
-        // anglesSetpoint.pitch = latitudePid.Compute(setpoint.lat * LAT_LON_PRECISION, values.lat * LAT_LON_PRECISION);
-        // anglesSetpoint.roll = longitudePid.Compute(setpoint.lon * LAT_LON_PRECISION, values.lon * LAT_LON_PRECISION);
+        anglesSetpoint.pitch = latitudePid.step(int16_t(setpoint.lat * LAT_LON_PRECISION), int16_t(values.lat * LAT_LON_PRECISION));
+        anglesSetpoint.roll = longitudePid.step(int16_t(setpoint.lon * LAT_LON_PRECISION), int16_t(values.lon * LAT_LON_PRECISION));
 
-        // pidSetpointNode.set(anglesSetpoint);
+        pidSetpointNode.set(anglesSetpoint);
     }
     positionNode.set(values);
 }

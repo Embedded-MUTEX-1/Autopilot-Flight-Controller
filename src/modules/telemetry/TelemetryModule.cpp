@@ -86,7 +86,8 @@ void TelemetryModule::sendTelemetryValues() {
         receiverValues, 
         motorsValues, 
         state, 
-        count / TELEMETRY_LOOP_FREQ);
+        count / TELEMETRY_LOOP_FREQ,
+        loopPeriod);
 }
 
 void TelemetryModule::processDataFromGroundStation() {

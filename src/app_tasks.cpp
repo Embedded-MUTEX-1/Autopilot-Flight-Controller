@@ -1,5 +1,5 @@
 #include "app_tasks.h"
-#include "modules/attitude/AttitudeModule.h"
+#include "modules/sensors/SensorsModule.h"
 #include "modules/motors/MotorsModule.h"
 #include "modules/navigation/NavigationModule.h"
 #include "modules/receiver/ReceiverModule.h"
@@ -7,6 +7,8 @@
 #include "modules/commander/CommanderModule.h"
 #include "modules/controller/ControllerModule.h"
 #include "modules/altitude/AltitudeModule.h"
+
+I2cDevice i2c;
 
 void receiverTask(void *args) {
     ReceiverModule module;
@@ -16,8 +18,8 @@ void receiverTask(void *args) {
     }
 }
 
-void attitudeTask(void *args) {
-    AttitudeModule module;
+void sensorsTask(void *args) {
+    SensorsModule module = SensorsModule(&i2c);
     module.init();
     while(true) {
         module.run();
@@ -25,7 +27,7 @@ void attitudeTask(void *args) {
 }
 
 void altitudeTask(void *args) {
-    AltitudeModule module;
+    AltitudeModule module = AltitudeModule(&i2c);
     module.init();
     while(true) {
         module.run();
@@ -65,7 +67,7 @@ void motorsTask(void *args) {
 
 void telemetryTask(void *args) {
     TelemetryModule module;
-    module.init();
+   module.init();
     while(true) {
         module.run();
     }

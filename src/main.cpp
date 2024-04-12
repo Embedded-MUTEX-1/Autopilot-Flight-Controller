@@ -1,7 +1,7 @@
 #include "app_tasks.h"
 #include "utils/utils.h"
 #include "resources/nodes.h"
-#include "devices-interfaces/low-level/IoDevice.h"
+#include "devices_interfaces/low-level/IoDevice.h"
 #include <Arduino.h>
 
 IoDevice iOpins;
@@ -21,22 +21,22 @@ void setup() {
         0);
 
     xTaskCreatePinnedToCore(
-        attitudeTask,   /* Function to implement the task */
-        "attitude",         /* Name of the task */
+        sensorsTask,   /* Function to implement the task */
+        "sensors",         /* Name of the task */
         10000,          /* Stack size in words */
         nullptr,           /* Task input parameter */
         2,              /* Priority of the task */
         nullptr,
         0);
 
-    xTaskCreatePinnedToCore(
-        altitudeTask,   /* Function to implement the task */
-        "altitude",         /* Name of the task */
-        10000,          /* Stack size in words */
-        nullptr,           /* Task input parameter */
-        2,              /* Priority of the task */
-        nullptr,
-        0);
+    // xTaskCreatePinnedToCore(
+    //     altitudeTask,   /* Function to implement the task */
+    //     "altitude",         /* Name of the task */
+    //     10000,          /* Stack size in words */
+    //     nullptr,           /* Task input parameter */
+    //     2,              /* Priority of the task */
+    //     nullptr,
+    //     0);
 
     xTaskCreatePinnedToCore(
         navigationTask,   /* Function to implement the task */

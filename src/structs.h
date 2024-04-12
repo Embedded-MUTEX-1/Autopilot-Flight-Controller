@@ -27,6 +27,7 @@ struct attitudeData {
     float roll;
     float pitch;
     float yaw;
+    float yawCorrected;
     float offsetRoll;
     float offsetPitch;
     float offsetYaw;

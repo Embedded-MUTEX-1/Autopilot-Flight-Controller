@@ -2,8 +2,8 @@
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_TELEMETRYRMODULE_H
 
 #include <cstdint>
-#include "../../devices-interfaces/telemetry/Telemetry.h"
-#include "../../devices-interfaces/telemetry/WirelessInterface.h"
+#include "../../devices_interfaces/telemetry/Telemetry.h"
+#include "../../devices_interfaces/telemetry/WirelessInterface.h"
 #include "../../resources/nodes.h"
 #include "../../utils/utils.h"
 

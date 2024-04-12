@@ -1,32 +1,32 @@
 #include "ControllerModule.h"
 
 ControllerModule::ControllerModule() {
+    rateRollPid = FastPID(P_ROLL_PITCH, I_ROLL_PITCH, D_ROLL_PITCH, PID_LOOP_FREQ, 16, true);
+    ratePitchPid = FastPID(P_ROLL_PITCH, I_ROLL_PITCH, D_ROLL_PITCH, PID_LOOP_FREQ, 16, true);
+    rateYawPid = FastPID(P_YAW, I_YAW, D_YAW, PID_LOOP_FREQ, 16, true);
+    altitudePid = FastPID(P_ALT, I_ALT, D_ALT, PID_LOOP_FREQ, 16, true);
+
     pidConfigNode.addCallback([this](struct pidConfig pidConfValues) -> void {
-        rateRollPid.SetTunings(pidConfValues.proll, pidConfValues.iroll, pidConfValues.droll);
-        ratePitchPid.SetTunings(pidConfValues.ppitch, pidConfValues.ipitch, pidConfValues.dpitch);
-        rateYawPid.SetTunings(pidConfValues.pyaw, pidConfValues.iyaw, pidConfValues.dyaw);
+        rateRollPid.setCoefficients(pidConfValues.proll, pidConfValues.iroll, pidConfValues.droll, PID_LOOP_FREQ);
+        ratePitchPid.setCoefficients(pidConfValues.ppitch, pidConfValues.ipitch, pidConfValues.dpitch, PID_LOOP_FREQ);
+        rateYawPid.setCoefficients(pidConfValues.pyaw, pidConfValues.iyaw, pidConfValues.dyaw, PID_LOOP_FREQ);
+
+        rateRollPid.clear();
+        ratePitchPid.clear();
+        rateYawPid.clear();
     });
 
     pidAltConfigNode.addCallback([this](struct pidAltitudeConfig pidAltConfValues) -> void {
-        altitudePid.SetTunings(pidAltConfValues.pAltitude, pidAltConfValues.iAltitude, pidAltConfValues.dAltitude);
+        altitudePid.setCoefficients(pidAltConfValues.pAltitude, pidAltConfValues.iAltitude, pidAltConfValues.dAltitude, PID_LOOP_FREQ);
+        altitudePid.clear();
     });
 }
 
 int8_t ControllerModule::init() {
-    rateRollPid.SetTunings(P_ROLL_PITCH, I_ROLL_PITCH, D_ROLL_PITCH);
-    ratePitchPid.SetTunings(P_ROLL_PITCH, I_ROLL_PITCH, D_ROLL_PITCH);
-    rateYawPid.SetTunings(P_YAW, I_YAW, D_YAW);
-    altitudePid.SetTunings(P_ALT, I_ALT, D_ALT);
-
-    rateRollPid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
-    ratePitchPid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
-    rateYawPid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
-    altitudePid.SetSampleTimeUs((1 / PID_LOOP_FREQ) * 1000);
-
-    rateRollPid.SetOutputLimits(-400, 400);
-    ratePitchPid.SetOutputLimits(-400, 400);
-    rateYawPid.SetOutputLimits(-400, 400);
-    altitudePid.SetOutputLimits(-400, 400);
+    rateRollPid.setOutputRange(-400, 400);
+    ratePitchPid.setOutputRange(-400, 400);
+    rateYawPid.setOutputRange(-400, 400);
+    altitudePid.setOutputRange(-400, 400);
 
     return 0;
 }
@@ -35,7 +35,7 @@ void ControllerModule::run() {
     timestamp = get_ms_count();
 
     getDataFromNodes();
-    computeSetpointAngleRate();
+    computeSetpoints();
     processStateFromCommander();
     computeOutputValuesAndSendValuesToNode();
 
@@ -51,9 +51,10 @@ void ControllerModule::getDataFromNodes() {
     receiverNode.get(receiverValues);
 }
 
-void ControllerModule::computeSetpointAngleRate() {
+void ControllerModule::computeSetpoints() {
     rollRateSetpoint = (anglesSetpoint.roll  - attitudeValues.roll)  * 5.0f;
     pitchRateSetpoint = (anglesSetpoint.pitch - attitudeValues.pitch) * 5.0f;
+    verticalSpeedSetpoint = (altitudeSetpoint - altitudeValues.alt) * 2.0f;
 }
 
 void ControllerModule::processStateFromCommander() {
@@ -70,17 +71,21 @@ void ControllerModule::processStateFromCommander() {
         attitudeValues.yaw -= offsetYaw;
         yawRateSetpoint = (0 - attitudeValues.yaw) * 5.0f;
     } else if(state.state == DISARMED) {
-        rateRollPid.Reset();
-        ratePitchPid.Reset();
-        rateYawPid.Reset();
+        rateRollPid.clear();
+        ratePitchPid.clear();
+        rateYawPid.clear();
         offsetYaw = attitudeValues.yaw;
     }
 }
 
 void ControllerModule::computeOutputValuesAndSendValuesToNode() {
-    values.out_roll  = rateRollPid.Compute(rollRateSetpoint, attitudeValues.gyroRateRoll);
-    values.out_pitch = ratePitchPid.Compute(pitchRateSetpoint, attitudeValues.gyroRatePitch);
-    values.out_yaw   = rateYawPid.Compute(yawRateSetpoint, attitudeValues.gyroRateYaw);
-    values.out_alt   = altitudePid.Compute(altitudeSetpoint, altitudeValues.alt);
+    values.out_roll  = rateRollPid.step(rollRateSetpoint, attitudeValues.gyroRateRoll);
+    values.out_pitch = ratePitchPid.step(pitchRateSetpoint, attitudeValues.gyroRatePitch);
+    values.out_yaw   = rateYawPid.step(yawRateSetpoint, attitudeValues.gyroRateYaw);
+    // values.out_alt   = state.state == POS_HOLD ? altitudePid.step(verticalSpeedSetpoint, altitudeValues.vertical_speed) : 0;
+    values.out_alt   = 0;
+    if(abs(altitudeSetpoint - altitudeValues.alt) <= ALTITUDE_ATTENUATOR_THRESOLD)
+        values.out_alt /= ALTITUDE_ATTENUATOR_VALUE;
+
     pidOutputNode.set(values);
 }

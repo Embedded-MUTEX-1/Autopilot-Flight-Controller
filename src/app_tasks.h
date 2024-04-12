@@ -2,7 +2,7 @@
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_TASKS_H
 
 void receiverTask(void *args);
-void attitudeTask(void *args);
+void sensorsTask(void *args);
 void altitudeTask(void *args);
 void navigationTask(void *args);
 void commanderTask(void *args);

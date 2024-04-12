@@ -5,10 +5,10 @@
 #ifndef AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_POSITIONMODULE_H
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_POSITIONMODULE_H
 
-#include "../../devices-interfaces/gps/Gps.h"
+#include "../../devices_interfaces/gps/Gps.h"
 #include "../../resources/nodes.h"
 #include "../../utils/utils.h"
-#include "../../../lib/QuickPID/src/QuickPID.h"
+#include "../../../lib/FastPID/src/FastPID.h"
 
 class NavigationModule {
 public:
@@ -23,8 +23,8 @@ private:
     struct navigationSetpoint setpoint;
     struct pidSetpoint anglesSetpoint;
     
-    QuickPID latitudePid;
-    QuickPID longitudePid;
+    FastPID latitudePid;
+    FastPID longitudePid;
 
     uint64_t timestamp = 0;
 

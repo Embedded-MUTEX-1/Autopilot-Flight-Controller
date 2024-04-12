@@ -6,8 +6,8 @@
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_RECEIVERMODULE_H
 
 #include <cstdint>
-#include "../../devices-interfaces/low-level/UartDevice.h"
-#include "../../devices-interfaces/receiver/Receiver.h"
+#include "../../devices_interfaces/low-level/UartDevice.h"
+#include "../../devices_interfaces/receiver/Receiver.h"
 #include "../../resources/nodes.h"
 #include "../../utils/utils.h"
 

@@ -5,8 +5,8 @@
 #ifndef AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_MOTORSMODULE_H
 #define AUTOPILOT_FLIGHT_CONTROLLER_SOFTWARE_MOTORSMODULE_H
 
-#include "../../devices-interfaces/motors/Motors.h"
-#include "../../devices-interfaces/low-level/AdcDevice.h"
+#include "../../devices_interfaces/motors/Motors.h"
+#include "../../devices_interfaces/low-level/AdcDevice.h"
 #include "../../resources/nodes.h"
 #include "../../utils/utils.h"
 #include "../../config.h"
